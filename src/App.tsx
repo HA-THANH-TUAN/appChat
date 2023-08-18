@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import { BrowserRouter , Routes, Route} from 'react-router-dom';
+import { Home } from './Pages/Home';
+import LiveStream from './Pages/LiveStream';
+import { Reels } from './Pages/Reels';
+import Profile from './Pages/Profile';
+import { Message } from './Pages/Message';
+import SignIn from './Pages/SignIn';
+import Private from './Pages/Private';
+import NotFound from './Pages/NotFound';
+import SignUp from './Pages/SignUp';
 
 function App() {
+  // http://localhost:3003/get-user/
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/account/sign-up' element={<SignUp/>}></Route >
+          <Route path='/account/sign-in' element={<SignIn/>}></Route >
+          <Route path='/' element={<Private/>}>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/message' element={<Message/>}/>
+            <Route path='/reel' element={<Reels/>}/>
+            <Route path='/live' element={<LiveStream/>}/>
+            <Route path='/profile' element={<Profile/>}/>
+          </Route>
+          <Route path='*' element={<NotFound/>}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 export default App;
+
+
