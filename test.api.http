@@ -1,0 +1,63 @@
+@host = http://localhost:3003
+
+POST {{host}}/authentication/sign-up HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Nguyen Thi Hong Tam",
+    "email": "s2nguyenthihongtam2s@gmail.com",
+    "password": "123456789"
+}   
+
+
+###
+POST {{host}}/authentication/sign-in HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Nguyen Thi My",
+    "email": "s2nguyenthimy2s@gmail.com",
+    "password": "123456789"
+}
+
+
+###
+POST {{host}}/authentication/sign-out HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTZhYzMyOTdiOWQ0MDVlZjA3Y2U5YSIsImRldmljZUlkIjoiZDJjYTY3ODE5MDE4MmJhMWRkZWJjZDRmIiwicm9sZSI6W10sImlhdCI6MTY5Mjg4MjI1MiwiZXhwIjoxNjkyODgyMzcyfQ.H1K-KSLmIaaffQoCSN7HYrkBbGe3K_kZMMaUv0QuvSeTSZ777ZwZ2hvhj6ax8CEhuGJ6ThVSSMJmFMpFtyUxqIyIZ5o83Apwkw8I-894u1sfry5n4Wyes63AANm-yv06fepwdxcD1YJ9DxzlN_kpJfGCiJvi5a_NGTTjiFCLrMwO8-TqkGPeyf58y9Vf-R4z9-lNdXvKC-tyZ-HUiN1o2E5TvW2XYYjdk_J9MAGVstN2AHcbD6bHP4djPHW1suPAQpJQ11v2CcBd_tV5GgWdur7C1GpqrnVQuVQ99cFX4aFpmaQyBlCIafOuiQEWAAeNefvlg5Cwy_C58U36pk54mg
+
+
+###
+GET {{host}}/get-user/ HTTP/1.1
+content-type: application/json
+Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTU4ZTgzMTJkOWY3MDYxOGFmOTAwYSIsImRldmljZUlkIjoiNDI4ZjNkMDExMzBhOTM4YmUyOTI0ZTc0IiwiaWF0IjoxNjkyNzY2MzAwLCJleHAiOjE2OTI3NzM1MDB9.KQtv85Ra3CfwjOZc6g05-QI2IScgUBoKAYZvxmgl12ajQmMQV-VWblctZVFP4vAYoTHAkBkGuicrDwzn2n7TRYeUd5gpcdT6ubbrQYLvIMerhkdc0k3vCLy2lov5UM_PJs6Wta1lzBit44qgjD3z5Mq6OUDx91PvtCNEQeGDiUKlT62IMTqhecF42k2LXPYfaZerq-UzqQzSMJqPak3_lztXk2_OEFD0GEDZQ4ZQliif7K01NuNGYMEEyIiqnFbGtAfmpCSw5vVViwI647FOyUQR7z1YSb_qwgv3C5l5TQOBYIzQzvgLp6LLfoIcS1mm4z4qLgURt2pc-_v2cZwjxw"
+
+{
+    "name":"Ha Thanh Tuan",
+    "email":"s123456@gmail.com",
+    "idToken":"64def0f6b0f282b2881ebece"
+}
+
+
+###
+GET {{host}}/add-friend/?id=64e08ddfbfc05b4914ea7be6&friendId=jhgffb HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTc1ODlhNGVlY2UzZjM2YmQ4M2ZhNSIsImRldmljZUlkIjoiOTRkNzNhNTc2OWU4OTEyMDdiNzIzNDYyIiwicm9sZSI6W10sImlhdCI6MTY5Mjg4MzA5OSwiZXhwIjoxNjkyODgzMjE5fQ.yp1UcOgrdVkWBdc_fIvUgF0WqkwNX3Nwiozo48yVvhU1-mOgSOsGiKIDoSAFJMkD3DqkERWR13FPUPE-Xdbf6TJcu461ejvgNeDTJCqn3tQaT-yFdttxwj0YIKqpmPpAiexhzEzkzyyCnja8OXwR48JEgD1s53r-dXpMGIlvb06kh75Utgo_Tk1zfVljdsfPh9UYCbHA9pBKc2gri5bj2iv0SuX-kwWKTPkoudnPzU9Gd0krT5AUd9a9dzK8xLHlKX4rfuOk1itKteKX7vAuejAN_6R7IccZ8oGmqehYqOWa6Ngb00Tsx-TefxtFLvIB_ov9EQXVavsZ5xT7bHlIyw
+
+
+###
+GET {{host}}/get-profile/64e08ddfbfc05b4914ea7be6 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTc1ODlhNGVlY2UzZjM2YmQ4M2ZhNSIsImRldmljZUlkIjoiOTRkNzNhNTc2OWU4OTEyMDdiNzIzNDYyIiwicm9sZSI6W10sImlhdCI6MTY5Mjg4MzA5OSwiZXhwIjoxNjkyODgzMjE5fQ.yp1UcOgrdVkWBdc_fIvUgF0WqkwNX3Nwiozo48yVvhU1-mOgSOsGiKIDoSAFJMkD3DqkERWR13FPUPE-Xdbf6TJcu461ejvgNeDTJCqn3tQaT-yFdttxwj0YIKqpmPpAiexhzEzkzyyCnja8OXwR48JEgD1s53r-dXpMGIlvb06kh75Utgo_Tk1zfVljdsfPh9UYCbHA9pBKc2gri5bj2iv0SuX-kwWKTPkoudnPzU9Gd0krT5AUd9a9dzK8xLHlKX4rfuOk1itKteKX7vAuejAN_6R7IccZ8oGmqehYqOWa6Ngb00Tsx-TefxtFLvIB_ov9EQXVavsZ5xT7bHlIyw
+
+
+###
+POST {{host}}/authentication/refresh-token HTTP/1.1
+content-type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTZhYzMyOTdiOWQ0MDVlZjA3Y2U5YSIsImRldmljZUlkIjoiZmNjNmYzNjZiNWU1YzQ0YjJmYzg0Yjk3Iiwicm9sZSI6W10sImlhdCI6MTY5Mjg3NjkyMSwiZXhwIjoxNjkyODc3MTYxfQ.hTKGiFoz0rT5OITxwdxaWo_pFI8Sc4NJCI7LCGzX3NLb0X2DZismMSKoiBM59GEmRoOLOpZHJWQ1cXObHkX5HPLJSxCb3obDOVH_SwenmHCICNsy34N17Sv5EjaLghNTFkzQRK3qR1EEC1hP6390-UUw776BhbvssUv5mvQW78ZRE_9K_-DBAzbKFTiqnlLsKFuh9W0wIc2X-1CZx6PazzNlmzdvk9KLzwr8HZ6jy-xhPaPAR1xhs9o0v8uLdyNxPrwKe04lnqWneJWIUg2PXk__IX0menTyLnj6QtKBBAOVJ-fCsSioVX2WPrGfNrXPpD90YmieU2kvYArpNdpm0g"
+}
+
+
+
