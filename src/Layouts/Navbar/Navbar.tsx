@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {NavLink,useLocation} from "react-router-dom"
+import {NavLink,useLocation, useNavigate} from "react-router-dom"
 
 import {AiFillHome,AiOutlineMenu} from "react-icons/ai"
 import {CgAddR} from "react-icons/cg"
@@ -12,6 +12,7 @@ import {FcEnteringHeavenAlive} from "react-icons/fc"
 import SearchFriend from './SearchFriend/SearchFriend'
 import CreatePost from './CreatePost/CreatePost'
 import Notification from './Notification/Notification'
+import { getCookie } from '../../Utils/setCookie'
 
 interface navListItem {
     name:string, url:string[]
@@ -24,7 +25,7 @@ const navList :navListItem[] = [
     },
     {
         name:"message",
-        url: ["/message","/message/inbox/t"]
+        url: ["/message","/message/inbox/"]
     },
     {
         name:"live",
@@ -44,6 +45,10 @@ const navList :navListItem[] = [
 export default function Navbar() {
     const [type, setType]=useState<boolean>(true);
     const [popUpCreate, setPopUpCreate]= React.useState<boolean>(false)
+    const [popUpName, setPopUpName]= React.useState<string>("")
+    const nav=useNavigate()
+    
+
     const [outlet, setOulet] =React.useState<string>("")
     const location = useLocation()
     const [navItem, setNavItem] = React.useState<string>()
@@ -63,6 +68,10 @@ export default function Navbar() {
         return result
 
     }
+
+    const cookie =getCookie()
+    console.log("cookiecookiecookie::::",cookie?.userId)
+
     useEffect(()=>{
         const navInfor = findNav(navList, location.pathname)
         if(navInfor!==undefined){setNavItem(navInfor.name)}
@@ -92,10 +101,11 @@ export default function Navbar() {
             <ul >
                 <li>
                     <NavLink to={"/"}>
-                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="home" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
+                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="home" && popUpName=="" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                             onClick={()=>{
                                 if(type!==true){ setType(true)}
                                 setOulet("")
+                                setPopUpName("")
                             }}
                         >
                             <span className='text-2xl'><AiFillHome/></span>
@@ -104,28 +114,31 @@ export default function Navbar() {
                     </NavLink>
                 </li>
                 <li>
-                    <span className={` ${type ===true ? "justify-start px-3": "justify-center"} flex items-center my-1 py-3 rounded-md cursor-pointer hover:bg-slate-100`}
+                    <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${popUpName==="search" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                         onClick={()=>{
                             if(type!==false){ setType(false)}
                             if(outlet==="search"){
                                 setOulet("")
+                                setPopUpName("")
                             }
                             else{
                                 setOulet("search")
+                                setPopUpName("search");
                             }
                         }}
                     >
                         <span className='text-2xl'><LuSearch/></span>
-                        <p className={`${type===true ? undefined :"hidden" } ml-4`}>Search</p>
+                        <p className={`${type===true ? undefined :"hidden" } ml-4`} >Search</p>
                     </span>
                 </li>
 
                 <li>
                   <NavLink to={"/reel"}> 
-                      <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="reel" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
+                      <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="reel" && popUpName=="" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                           onClick={()=>{
                               if(type!==true){ setType(true)}
                               setOulet("");
+                              setPopUpName("")
                           }}
                       >
                           <span className='text-2xl'><PiFilmReelLight/></span>
@@ -134,11 +147,12 @@ export default function Navbar() {
                   </NavLink>
                 </li>
                 <li>
-                    <NavLink to={"/message"}> 
-                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="message" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
+                    <NavLink to={"/message/inbox/"}> 
+                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="message" && popUpName=="" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                             onClick={()=>{
                                 if(type===true){ setType(false)}
                                 setOulet("");
+                                setPopUpName("")
                             }}
                         >
                             <span className='text-2xl'><RiMessengerLine/></span>
@@ -148,10 +162,11 @@ export default function Navbar() {
                 </li>
                 <li>
                     <NavLink to={"/live"}> 
-                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="live" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
+                        <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="live" && popUpName=="" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                             onClick={()=>{
                                 setType((type=>(!type)))
                                 setOulet("");
+                                setPopUpName("")
                         }}
                         >
                             <span className='text-2xl'><MdOutlineLiveTv/></span>
@@ -161,19 +176,21 @@ export default function Navbar() {
                     </NavLink>
                 </li>
               <li>
-                    <span className={` ${type ===true ? "justify-start px-3": "justify-center"} flex items-center my-1 py-3 rounded-md cursor-pointer hover:bg-slate-100`}
+                    <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${popUpName==="notification" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
                         onClick={()=>{
                             if(type===true){ setType(false)}
                             if(outlet==="notification"){
                                 setOulet("")
+                                setPopUpName("");
                             }
                             else{
                                 setOulet("notification");
+                                setPopUpName("notification");
                             }
                         }}
                     >
                         <span className='text-2xl'><IoMdNotificationsOutline/></span>
-                        <p className={`${type===true ? undefined :"hidden" } ml-4`}>Notifications</p>
+                        <p className={`${type===true ? undefined :"hidden" } ml-4`} >Notifications</p>
                     </span>
 
                 </li>
@@ -181,22 +198,35 @@ export default function Navbar() {
                     <span className={` ${type ===true ? "justify-start px-3": "justify-center"} flex items-center my-1 py-3 rounded-md cursor-pointer hover:bg-slate-100`}
                         onClick={()=>{
                             setPopUpCreate(true)
+                            setPopUpName("create")
                         }}
                     >
                         <span className='text-2xl'><CgAddR/></span>
-                        <p className={`${type===true ? undefined :"hidden" } ml-4`}>Create</p>
+                        <p className={`${type===true ? undefined :"hidden" } ml-4`} >Create</p>
                     </span>
 
                 </li>
                 <li>
-                    <NavLink to={"/profile"}> 
+                    <a> 
                         <span className={` ${type ===true ? "justify-start px-3": "justify-center"} ${navItem==="profile" ? "font-semibold bg-slate-300" : "font-normal hover:bg-slate-100"} flex items-center my-1 py-3 rounded-md cursor-pointer`}
-                            onClick={()=>{if(type!==true){ setType(true)}}}
+                            onClick={
+                                ()=>{
+                                    if(type!==true){ setType(true)};
+                                    if(cookie?.userId){
+                                        nav(`/profile/${cookie.userId}`)
+                                        console.log("chuyen", `/profile/${cookie.userId}`)
+                                    }else{
+                                        nav("/account/sign-in");
+                                        localStorage.removeItem("isLogin")
+                                    }
+                                }
+                               
+                            }
                         >
                             <span className=''><span className='w-6 h-6 block bg-blue-500 rounded-[50%]'></span>
                             </span> <p className={`${type===true ? undefined :"hidden" } ml-4`}>Profile</p>
                         </span>
-                    </NavLink>
+                    </a>
                 </li>
             </ul>
             <div className={`my-10 ${type ===true ? "justify-start px-3": "justify-center"} flex items-center py-3 px-3 rounded-md cursor-pointer hover:bg-slate-100`}
@@ -209,7 +239,6 @@ export default function Navbar() {
         {outlet === "search" ? <SearchFriend/> : outlet ==="notification" ? <Notification/> : undefined}
         {
             popUpCreate === true && <CreatePost handleCloseMadal={()=>{setPopUpCreate(false)}} />
-
         }
         
        

@@ -7,17 +7,18 @@ import { PiWarningCircle } from 'react-icons/pi'
 import { BsCameraVideo,BsEmojiSmile,BsImage } from 'react-icons/bs'
 import { FiPhoneCall } from 'react-icons/fi'
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { useDispatch } from 'react-redux'
+// import { useAppDispatch, useAppSelector } from '../../app/hooks'
+// import { useDispatch } from 'react-redux'
 
 
-import io from 'socket.io-client';
-socket= io("http://localhost:3003")
+
+import { useNavigate } from 'react-router-dom'
+
 
 
 const FieldChat = () => {
-  const dispatch =useAppDispatch()
-
+  // const dispatch =useAppDispatch()
+  const nav=useNavigate()
   const [message, setMessage] =React.useState<string>("")
   const [isVisibleSend, setVisibleSend]=React.useState(false)
 
@@ -29,20 +30,15 @@ const FieldChat = () => {
   
   }
 
-  const counter = useAppSelector((state)=>state.counter.value)
-
-
-
   const refVideoLocal=useRef<HTMLVideoElement>(null)
   useEffect(()=>{
-    socket.on('message', message => {
-      console.log("tui nhan tin nhan ne",message)
-    });
+   
 
   },[])
 
   const handleSendMessage = ()=>{
-    socket.emit(message)
+    console.log(">>>>>>> Send")
+ 
     
   }
   
@@ -56,13 +52,21 @@ const FieldChat = () => {
                   <div className='w-11 h-11 bg-slate-600 rounded-[50%]'></div>
                   <div className='ml-2'>
                       <h2 className='font-bold'>Ha Thanh Tuan</h2>
-                      {/* <p className='text-xs'>Hoạt động 2 giờ trước counter:{counter} numberIO: {numberIO}  </p> */}
+                      <p className='text-xs'>Hoạt động 2 giờ trước </p>
                   </div>
               </div>
               <div className='pl-3'>
                   <ul className='flex'>
-                    <li className='mx-2 text-2xl flex justify-center items-center hover:opacity-70 cursor-pointer'><FiPhoneCall/></li>
-                    <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer'><BsCameraVideo/></li>
+                    <li className='mx-2 text-2xl flex justify-center items-center hover:opacity-70 cursor-pointer' 
+                      onClick={()=>{
+                        nav("/call")
+                      }}
+                    ><FiPhoneCall/></li>
+                    <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer' 
+                      onClick={()=>{
+                        nav(`/call?video=false&receiverId=rtyfftftdcgyt`)
+                      }}
+                    ><BsCameraVideo/></li>
                     <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer'><PiWarningCircle/></li>
                   </ul>
               </div>

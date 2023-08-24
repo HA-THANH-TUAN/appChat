@@ -1,27 +1,51 @@
+import { IUser } from "./user.type"
 
 export interface IDataResponse<Idata> {
   status:number,
   message:string,
-  metadata?:Idata
+  metadata:Idata|null
 }
 
 
-export interface ITokens{
+export interface IMetaDataTokens{
   accessToken: string,
-  refreshToken:string,
-  idToken:string
-
+  refreshToken:string
 }
 
-export interface IDataMetaSignIn{
+export interface IMetaDataSignInUser{
   name:string,
   email:string,
-  tokens:ITokens
+  userId:string
 }
-export interface IDataMetaSignUp extends IDataMetaSignIn{}
+
+export interface IMetaDataSignIn{
+  tokens:IMetaDataTokens,
+  user:IMetaDataSignInUser
+}
+
+
+export interface IPagination {
+  total: number,
+  page:number,
+  limit:number
+
+}
+
+export interface IMetaDataUser {
+  pagination:IPagination,
+  users:IUser[]
+}
+
+
+export interface IMetaDataSignUp extends IMetaDataSignIn{}
 
 
 
-export interface IResponeSignUp extends IDataResponse<IDataMetaSignIn>{}
-export interface IResponeSignIn extends IDataResponse<IDataMetaSignIn>{}
+export interface IResponeUser extends IDataResponse<IMetaDataUser>{}
+
+export interface IResponeSignUp extends IDataResponse<IMetaDataSignIn>{}
+
+export interface IResponeSignIn extends IDataResponse<IMetaDataSignIn>{}
+
+export interface IResponeSignOut extends IDataResponse<null>{}
 

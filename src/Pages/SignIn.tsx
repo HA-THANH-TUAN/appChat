@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import AuthenApi from '../apis/authenApi'
 import {IFomSignIn} from '../apis/authenApi'
-import { IDataMetaSignIn, IResponeSignIn } from '../models/Types/responseType'
+import { IMetaDataSignUp, IResponeSignIn } from '../models/Types/responseType'
 import { useNavigate } from 'react-router-dom'
+import { setCookie } from '../Utils/setCookie'
+import Cookies from 'js-cookie'
 
 
 
@@ -42,27 +44,30 @@ const SignIn = () => {
     setPushLabel({...pushLabel, [e.target.name]: valueEmail.length === 0 ? false : true })
   }
 
-  const handleSaveToken =(metadata:IDataMetaSignIn)=>{
-    localStorage.setItem("name",metadata.name)
-    localStorage.setItem("email",metadata.email)
-    localStorage.setItem("isLogin","true")
-    nav("/")
-  }
+  
+
 
   const handleLogin =async ()=>{
     try {
       setIsError(false)
       setIsLoading(false)
       const dt = await AuthenApi.signIn(formData)
-      if(dt.status===401){
+      if(dt.status===401 || dt.status===500){
         setIsError(true)
+        alert("Error authentication")
       }else{
-        const metadata=dt.metadata
-        if(metadata){
-          handleSaveToken(metadata)
-        }
+        const userData=dt.metadata?.user
+        const tokensData=dt.metadata?.tokens
+        if(tokensData && userData){
+          const twoHourFromNow = new Date().getTime() + 2*60*60*1000
+          Cookies.set("access_token", tokensData.accessToken ,{expires:twoHourFromNow, secure:true})
+          Cookies.set("refresh_token", tokensData.refreshToken, {expires:twoHourFromNow, secure:true})
+          localStorage.setItem("user", JSON.stringify(userData))
+          nav("/")
+        }  
       }
     } catch (error) {
+      alert("Error app !!!")
       nav("*")
     }finally{
       setIsLoading(false)
@@ -103,7 +108,7 @@ const SignIn = () => {
 
         </section>
         <section className='border my-4 py-3'>
-          <p className='text-center'>Don't have a account ? <span className='mr-2 text-blue-500 font-medium hover:text-blue-300 cursor-pointer ml-2' onClick={()=>{nav("/account/sign-up")}} >Sign Up</span></p>
+          <p className='text-center'>Don't have a account ? <span className='mr-2 text-blue-800 font-bold hover:text-blue-500 cursor-pointer ml-2' onClick={()=>{nav("/account/sign-up")}} >Sign Up</span></p>
         </section>
       </div>
     </div>

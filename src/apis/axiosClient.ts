@@ -1,4 +1,5 @@
 import axios, {InternalAxiosRequestConfig, AxiosResponse} from "axios";
+import { getCookie } from "../Utils/setCookie";
 
 const axiosClient=axios.create({
     baseURL:process.env.REACT_APP_URL_DOMAIN,
@@ -13,6 +14,27 @@ const axiosClient=axios.create({
 // Add a request interceptor
 axiosClient.interceptors.request.use(function (config:InternalAxiosRequestConfig) {
     // Do something before request is sent
+    const requestNotToken = [
+      {
+        method: "post",
+        url:"authentication/sign-in"
+      }
+      ,
+      {
+        method: "post",
+        url:"authentication/sign-up"
+      }
+    ]
+    const isAttachToken = requestNotToken.some((({method,url})=>config.url?.includes(url)&&config.method?.toLowerCase()===method.toLowerCase() ))
+    console.log("goi req")
+    if(isAttachToken===false){
+      const objectCookie=getCookie()
+      if(objectCookie!==undefined && Object.keys(objectCookie).length>0 ){
+        config.headers['Authorization'] = `Bearer ${objectCookie.accessToken}`;
+      }
+
+    }
+
     return config;
   }, function (error) {
     // Do something with request error

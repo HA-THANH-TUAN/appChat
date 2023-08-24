@@ -1,8 +1,11 @@
 import React from 'react'
 import {FiEdit} from "react-icons/fi"
 import {BsBellSlash} from "react-icons/bs"
+interface IMessage{
 
-const ListChat = () => {
+    handleSetIsPopUp:  React.Dispatch<React.SetStateAction<boolean>> 
+  }
+const ListChat:React.FC<IMessage> = ({handleSetIsPopUp}) => {
   return (
     <div>
         <div className='h-screen w-[400px] bg-white border-r-2 border-zinc-300 '>
@@ -10,12 +13,13 @@ const ListChat = () => {
                 <div className='text-2xl flex justify-between items-center font-bold mt-6'>
                     <h2 className=''>Ha Thanh Tuan</h2>
                     <div className='flex items-center'>
-                        <span className='hover:opacity-60 cursor-pointer text-black'><FiEdit/></span>
+                        <button className='hover:opacity-60 cursor-pointer text-black' onClick={()=>{handleSetIsPopUp(true)}}><FiEdit/></button>
                     </div>
                 </div>
                 <div>
                     <p className=' py-5 font-bold flex justify-between'>
                        <span className=''>Messages</span>
+                       <span className='mr-5 text-zinc-600 hover:cursor-pointer'>Requests (<span>3</span>)</span>
                     </p>
                 </div>
             </div>

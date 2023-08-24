@@ -1,8 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
-import { io } from "socket.io-client"
+
 
 const initial : any = ""
-export const createSocketIO=createAction<undefined>("createSocketIO")
+
 
 export default createReducer(initial, (builder)=>{
     // builder.addCase(createSocketIO, ()=>{
