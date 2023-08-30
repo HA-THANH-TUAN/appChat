@@ -1,13 +1,15 @@
 import React from 'react'
 import Navbar from '../Navbar/Navbar'
 import {io} from "socket.io-client"
+import Cookies from 'js-cookie'
+import { useAppSelector } from '../../app/hooks'
 
 interface IMainPrivate{
     
 
 }
 
-const socket= io("http://localhost:3003")
+export const socket= io("http://localhost:3003")
 
 // socket.on("session", ({ sessionID, userID }) => {
 //   // attach the session ID to the next reconnection attempts
@@ -19,11 +21,9 @@ const socket= io("http://localhost:3003")
 // });
 
 const  created =()=>  {
-  const sessionID = localStorage.getItem("sessionID");
-  console.log("run===>::: create", sessionID)
-  
-  if (sessionID) {
-    socket.auth = { sessionID };
+  const access_token= Cookies.get("access_token")  
+  if (access_token!==undefined) {
+    socket.auth = { access_token };
     socket.connect();
   }
 } 
@@ -31,6 +31,7 @@ const  created =()=>  {
 created()
 
 const MainPrivate :React.FC<any> = ({children}) => {
+
   return (
     <div className='flex'>
         <Navbar></Navbar>

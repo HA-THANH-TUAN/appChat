@@ -1,3 +1,5 @@
+import { IPagination } from "./responseType";
+
 export interface IUser {
     _id: string,
     name: string,
@@ -6,6 +8,11 @@ export interface IUser {
     createdAt: string,
     updatedAt: string,
 }
+
+export interface IMetaDataUser {
+    pagination:IPagination,
+    users:IUser[]
+  }
 
 enum userStatus {
     "active"="active",

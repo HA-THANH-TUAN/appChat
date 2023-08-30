@@ -18,6 +18,11 @@ interface navListItem {
     name:string, url:string[]
 }
 
+interface IdataUserLocalStorage{
+    name:string,
+    email:string,
+    id:string
+}
 const navList :navListItem[] = [
     {
         name:"home",
@@ -66,11 +71,7 @@ export default function Navbar() {
             return isExist
         })
         return result
-
     }
-
-    const cookie =getCookie()
-    console.log("cookiecookiecookie::::",cookie?.userId)
 
     useEffect(()=>{
         const navInfor = findNav(navList, location.pathname)
@@ -212,13 +213,15 @@ export default function Navbar() {
                             onClick={
                                 ()=>{
                                     if(type!==true){ setType(true)};
-                                    if(cookie?.userId){
-                                        nav(`/profile/${cookie.userId}`)
-                                        console.log("chuyen", `/profile/${cookie.userId}`)
-                                    }else{
-                                        nav("/account/sign-in");
-                                        localStorage.removeItem("isLogin")
-                                    }
+                                    const dataUserLocalStorage=localStorage.getItem("user")
+                                    if(dataUserLocalStorage!==null){
+                                        const {id}:IdataUserLocalStorage = JSON.parse(dataUserLocalStorage)
+                                        if(id){
+                                            nav(`/profile/${id}`)
+                                        }else{
+                                            nav("/account/sign-in");
+                                        }
+                                    }else{nav("/account/sign-in");}
                                 }
                                
                             }

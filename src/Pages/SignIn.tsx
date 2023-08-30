@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import AuthenApi from '../apis/authenApi'
 import {IFomSignIn} from '../apis/authenApi'
-import { IMetaDataSignUp, IResponeSignIn } from '../models/Types/responseType'
 import { useNavigate } from 'react-router-dom'
 import { setCookie } from '../Utils/setCookie'
 import Cookies from 'js-cookie'
+import { useMutation } from 'react-query'
+import Loading from '../Components/Loading'
 
 
 
@@ -44,37 +45,28 @@ const SignIn = () => {
     setPushLabel({...pushLabel, [e.target.name]: valueEmail.length === 0 ? false : true })
   }
 
-  
-
-
-  const handleLogin =async ()=>{
-    try {
-      setIsError(false)
-      setIsLoading(false)
-      const dt = await AuthenApi.signIn(formData)
-      if(dt.status===401 || dt.status===500){
-        setIsError(true)
-        alert("Error authentication")
-      }else{
-        const userData=dt.metadata?.user
-        const tokensData=dt.metadata?.tokens
-        if(tokensData && userData){
-          const twoHourFromNow = new Date().getTime() + 2*60*60*1000
-          Cookies.set("access_token", tokensData.accessToken ,{expires:twoHourFromNow, secure:true})
-          Cookies.set("refresh_token", tokensData.refreshToken, {expires:twoHourFromNow, secure:true})
-          localStorage.setItem("user", JSON.stringify(userData))
-          nav("/")
-        }  
-      }
-    } catch (error) {
-      alert("Error app !!!")
-      nav("*")
-    }finally{
-      setIsLoading(false)
+  const mutationSignIn = useMutation(
+    async (formData:IFomSignIn)=>{
+          return await AuthenApi.signIn(formData)
+    },
+    {
+      onSuccess: async (data) => {
+        const status= data.status
+        if(status===200){
+          const userData=data.metadata?.user
+          const tokensData=data.metadata?.tokens
+          if(tokensData && userData){
+            const twoHourFromNow = new Date().getTime() + 2*60*60*1000
+            Cookies.set("access_token", tokensData.accessToken ,{expires:twoHourFromNow, secure:true})
+            Cookies.set("refresh_token", tokensData.refreshToken, {expires:twoHourFromNow, secure:true})
+            localStorage.setItem("user", JSON.stringify(userData))
+            nav("/")
+          }  
+        }
+      },
     }
-  }
-
-
+  )
+  
   return (
     <div className='backgound-login w-screen h-screen flex justify-center items-center'>
 
@@ -82,7 +74,13 @@ const SignIn = () => {
       <div className='w-[350px] mx-auto'>
         <section className='border px-6 pb-3'>
           <h1 className='text-3xl font-bold my-6 text-center'>Stream Live</h1>
-          <form className=''>
+          <form className='' onSubmit={(e)=>{
+              e.preventDefault()
+              if(mutationSignIn.status !=="loading"){
+                mutationSignIn.mutate(formData)
+              }
+              
+            }}>
             <div className='relative my-7'>
               <label className={`absolute ${pushLabel.email ? "top-[-2px] text-xs h-6 font-medium" : "top-[7px] h-7"  } left-3  transition-all flex justify-center pointer-events-none items-center`}> Email</label>
               <input name='email' value={formData.email} className={`w-full  h-11 border border-zinc-300 rounded-sm px-3 ${pushLabel.email ? "pt-3 " : "py-4"} focus:outline-none`} type="text" 
@@ -100,11 +98,12 @@ const SignIn = () => {
                 />
             <span className='font-semibold absolute right-3 cursor-pointer hover:opacity-70 text-sm top-[8px] flex justify-center items-center h-7' onClick={()=>{setHidenPassword(state=>(!state))}}>Show</span>
             </div>
-            <button type='button' className='bg-blue-500 w-full py-1 rounded-md text-white' onClick={()=>{handleLogin()}} >Login</button>
+            <button type='submit' className='bg-blue-500 w-full py-1 h-[36px]  flex items-center justify-center rounded-md font-medium text-white'>Login 
+              { mutationSignIn.status ==="loading" && <span className='ml-2'><Loading w="30px" r="12" borderSpin={4 } borderColor='#e5e7eb' bg='#3b82f6'/></span>}
+            </button>
 
           </form>
           <p className='text-end my-4 font-medium text-sm cursor-pointer'>Forgot password ?</p>
-
 
         </section>
         <section className='border my-4 py-3'>

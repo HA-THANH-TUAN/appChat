@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import AuthenApi from '../apis/authenApi'
 import {IFomSignUp} from '../apis/authenApi'
-import { IMetaDataSignUp, IResponeSignUp } from '../models/Types/responseType'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 

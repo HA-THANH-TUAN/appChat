@@ -1,4 +1,6 @@
-import { IUser } from "./user.type"
+import { IMetaDataSignIn } from "./auth.response"
+import { IConversation } from "./chat.response.type"
+import { IMetaDataUser, IUser } from "./user.type"
 
 export interface IDataResponse<Idata> {
   status:number,
@@ -6,46 +8,27 @@ export interface IDataResponse<Idata> {
   metadata:Idata|null
 }
 
-
-export interface IMetaDataTokens{
-  accessToken: string,
-  refreshToken:string
-}
-
-export interface IMetaDataSignInUser{
-  name:string,
-  email:string,
-  userId:string
-}
-
-export interface IMetaDataSignIn{
-  tokens:IMetaDataTokens,
-  user:IMetaDataSignInUser
-}
-
-
 export interface IPagination {
   total: number,
   page:number,
   limit:number
-
-}
-
-export interface IMetaDataUser {
-  pagination:IPagination,
-  users:IUser[]
 }
 
 
-export interface IMetaDataSignUp extends IMetaDataSignIn{}
 
+export interface IResponseConversations extends IDataResponse<IConversation[]>{}
 
+export interface IMetaDataRefreshToken extends Omit<IMetaDataSignIn, "user">{}
 
-export interface IResponeUser extends IDataResponse<IMetaDataUser>{}
+export interface IResponeUser extends IDataResponse<IUser>{}
+
+export interface IResponeUsers extends IDataResponse<IMetaDataUser>{}
 
 export interface IResponeSignUp extends IDataResponse<IMetaDataSignIn>{}
 
 export interface IResponeSignIn extends IDataResponse<IMetaDataSignIn>{}
+
+export interface IReponseRefreshToken extends IDataResponse<IMetaDataRefreshToken>{}
 
 export interface IResponeSignOut extends IDataResponse<null>{}
 
