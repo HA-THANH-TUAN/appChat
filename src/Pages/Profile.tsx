@@ -7,6 +7,8 @@ import UserApi from '../apis/userApi'
 import { IUser } from '../models/Types/user.type'
 import Cookies from 'js-cookie'
 import { useQuery } from 'react-query'
+import { resetAuth } from '../features/auth/authSlice'
+import { useAppDispatch } from '../app/hooks/useCustomReduxTookit'
 
 const Profile = () => {
   const {userId}=useParams<string>()
@@ -50,21 +52,17 @@ const Profile = () => {
   
   
 
+ 
 
 
-
-
+  const dispatch =useAppDispatch()
   const nav=useNavigate()
 
   const handleLogout=()=>{
     const fethApiLogout= async ()=>{
         const result=await AuthenApi.signOut()
         if(result.status===200){
-          alert("OKE men")
-          localStorage.removeItem("user")
-          Cookies.remove("access_token")
-          Cookies.remove("refresh_token")
-          nav("/account/sign-in")
+          dispatch(resetAuth())
         }
         else{
           alert("Loi nha")

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import AuthenApi from '../apis/authenApi'
 import {IFomSignIn} from '../apis/authenApi'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +6,10 @@ import { setCookie } from '../Utils/setCookie'
 import Cookies from 'js-cookie'
 import { useMutation } from 'react-query'
 import Loading from '../Components/Loading'
+import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../app/hooks/useCustomReduxTookit'
+import { resetAuth, setIsLogin } from '../features/auth/authSlice'
+import { handleLogout } from '../Utils/handleLogout'
 
 
 
@@ -15,8 +19,10 @@ interface IpushLable {
 }
 
 const SignIn = () => {
+
   const [isLoading, setIsLoading]=useState<boolean>(false)
   const [isError, setIsError]=useState<boolean>(false)
+  const dispatch = useAppDispatch()
   const nav=useNavigate()
   const [formData, setFormData] =useState<IFomSignIn>({email:"555", password:""})
   const [hiddenPassword, setHidenPassword] = useState<boolean>(true)
@@ -29,8 +35,7 @@ const SignIn = () => {
     },{email:false, password:false})
     return result
   })
-
-
+  
   const onChange:React.ChangeEventHandler<HTMLInputElement>=(e)=>{
     const valueEmail= e.target.value
     setPushLabel({...pushLabel, [e.target.name]: valueEmail.length>0})
@@ -57,15 +62,20 @@ const SignIn = () => {
           const tokensData=data.metadata?.tokens
           if(tokensData && userData){
             const twoHourFromNow = new Date().getTime() + 2*60*60*1000
-            Cookies.set("access_token", tokensData.accessToken ,{expires:twoHourFromNow, secure:true})
-            Cookies.set("refresh_token", tokensData.refreshToken, {expires:twoHourFromNow, secure:true})
+            Cookies.set("access_token", tokensData.accessToken)
+            Cookies.set("refresh_token", tokensData.refreshToken)
             localStorage.setItem("user", JSON.stringify(userData))
+            dispatch(setIsLogin(true))
             nav("/")
           }  
         }
       },
     }
   )
+  useEffect(()=>{
+    handleLogout()
+    dispatch(resetAuth())
+  },[])
   
   return (
     <div className='backgound-login w-screen h-screen flex justify-center items-center'>

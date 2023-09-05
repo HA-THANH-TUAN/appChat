@@ -1,3 +1,5 @@
+import { IUser } from "./user.type";
+
 export interface IConversation {
     _id:string, 
     name:string | null,
@@ -12,8 +14,8 @@ export interface IConversation {
 
 export interface IMember {
     _id:string, 
-    userId:string,
-    role:string,
+    user:Omit<IUser, "createdAt" | "updatedAt" >
+    role:roleConversation,
 }
 
 

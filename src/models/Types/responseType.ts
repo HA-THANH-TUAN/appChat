@@ -1,6 +1,6 @@
 import { IMetaDataSignIn } from "./auth.response"
 import { IConversation } from "./chat.response.type"
-import { IMetaDataUser, IUser } from "./user.type"
+import {IMetaDataUsers, IUser } from "./user.type"
 
 export interface IDataResponse<Idata> {
   status:number,
@@ -22,7 +22,7 @@ export interface IMetaDataRefreshToken extends Omit<IMetaDataSignIn, "user">{}
 
 export interface IResponeUser extends IDataResponse<IUser>{}
 
-export interface IResponeUsers extends IDataResponse<IMetaDataUser>{}
+export interface IResponeUsers extends IDataResponse<IMetaDataUsers>{}
 
 export interface IResponeSignUp extends IDataResponse<IMetaDataSignIn>{}
 
@@ -31,4 +31,3 @@ export interface IResponeSignIn extends IDataResponse<IMetaDataSignIn>{}
 export interface IReponseRefreshToken extends IDataResponse<IMetaDataRefreshToken>{}
 
 export interface IResponeSignOut extends IDataResponse<null>{}
-

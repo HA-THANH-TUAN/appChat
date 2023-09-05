@@ -2,42 +2,29 @@ import React, { useState } from 'react'
 import { BsEmojiSmile, BsImage } from 'react-icons/bs'
 import { FaRegHeart } from 'react-icons/fa'
 import { MdOutlineKeyboardVoice } from 'react-icons/md'
-import { socket } from '../MainPrivate/MainPrivate'
 
 interface INavSendMessage{
+  handleSendMessage?: ()=>void 
+  message :string
+  handleSetMessage : React.Dispatch<React.SetStateAction<string>>
 }
 
-const NavSendMessage:React.FC<INavSendMessage> = () => {
+const NavSendMessage:React.FC<INavSendMessage> = ({handleSendMessage , handleSetMessage , message}) => {
     const [visibleSend, setVisibleSend]= useState<boolean>()
-    const [message, setMessage] =useState<string>()
 
     const handleOnchangeInput =(e: React.ChangeEvent<HTMLInputElement>)=>{
         const vl=e.target.value
-        setMessage(vl)
+        handleSetMessage(vl)
         setVisibleSend( vl==="" ? false : true )
-      
+    }
+
+    const handleSubmit = (e:React.KeyboardEvent<HTMLInputElement>)=>{
+      const isPressEnter = e.key.toLowerCase()==="enter"
+      if(message?.length>0 && isPressEnter){
+        handleSendMessage?.()
+        handleSetMessage("")
       }
 
-    const handleSendMessage:React.MouseEventHandler<HTMLButtonElement> = (e)=>{
-      const dtLocalS= localStorage.getItem("user")
-      if(dtLocalS!==null){
-        const user = JSON.parse(dtLocalS)
-        socket.timeout(6000).emit(
-          
-          "hello",
-          {
-            name:user.name,
-            content: message
-          },
-          
-          "email"
-          ,
-          {
-            emaik:user.emaik,
-            content: message
-          },
-        )
-      }
     }
 
     return (
@@ -47,7 +34,7 @@ const NavSendMessage:React.FC<INavSendMessage> = () => {
                 <div className='px-[14px] flex h-full'>
                   <div className=' flex w-full items-center'>
                     <span className='text-2xl '><BsEmojiSmile/></span>
-                    <div className='flex-1 mx-3'><input className='w-full h-full focus:outline-none' value={message} onChange={handleOnchangeInput} placeholder='Message ...' type="text" /></div>
+                    <div className='flex-1 mx-3'><input className='w-full h-full focus:outline-none' value={message} onKeyDown={handleSubmit} onChange={handleOnchangeInput} placeholder='Message ...' type="text" /></div>
                     <>
                       {
                         !visibleSend ? 

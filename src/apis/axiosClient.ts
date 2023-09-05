@@ -32,6 +32,7 @@ axiosClient.interceptors.request.use(function (config:InternalAxiosRequestConfig
     const isAttachToken = requestNotToken.some((({method,url})=>config.url?.includes(url)&&config.method?.toLowerCase()===method.toLowerCase() ))
     console.log("goi req")
     if(isAttachToken===false){
+      console.log("dinh kem token")
       const access_token= Cookies.get("access_token")
       if(access_token!==undefined){
         config.headers['Authorization'] = `Bearer ${access_token}`;
@@ -51,22 +52,22 @@ axiosClient.interceptors.response.use( async(response:AxiosResponse) => {
 
     const isLoginAgain = dtResponse.message==="login again" && dtResponse.status===401
     let isExprire = dtResponse.message==="expired" && dtResponse.status===401
-    console.log("isLoginAgain:::",isLoginAgain)
-    console.log("isExprire:::",isExprire)
+    // console.log("isLoginAgain:::",isLoginAgain)
+    // console.log("isExprire:::",isExprire)
 
     // console.log("interception Response::", isExprire)
 
     if(isLoginAgain){
       store.dispatch(refreshApp())
       handleLoginAgain()
-      console.log("login lai")
+      // console.log("login lai")
     }
     if (isExprire){
 
-      console.log("het han ne")
+      // console.log("het han ne")
       const resultHandleRefreshToken = await handleRefreshToken()
       if(resultHandleRefreshToken){
-        console.log("responseresponseresponse::",response)
+        // console.log("responseresponseresponse::",response)
         
        return await  axiosClient(response.config)
       }

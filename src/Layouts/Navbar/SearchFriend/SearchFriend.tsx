@@ -1,16 +1,7 @@
 import React,{useEffect, useState} from 'react'
-import { CgClose } from 'react-icons/cg'
 import {IoClose, IoCloseCircleSharp} from "react-icons/io5"
-import {TfiClose} from "react-icons/tfi"
-import axiosClient from '../../../apis/axiosClient'
-import AuthenApi from '../../../apis/authenApi'
-import { getCookie } from '../../../Utils/setCookie'
-import UserApi from '../../../apis/userApi'
-import { IPagination } from '../../../models/Types/responseType'
 import { IUser } from '../../../models/Types/user.type'
 import { useNavigate } from 'react-router-dom'
-import Loading from '../../../Components/Loading'
-import AreaMessage from '../../FieldChat/AreaMessage'
 import AreaResultSearch from './AreaResultSearch'
 
 

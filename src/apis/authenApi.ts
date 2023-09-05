@@ -29,6 +29,7 @@ class AuthenApi {
         return axiosClient.post<undefined,IResponeSignUp>("/authentication/sign-up",bodyData)
     }
     static signOut=()=>{
+        console.log("call API logout")
         return axiosClient.post<undefined,IResponeSignOut>(`/authentication/sign-out/`)
     }
     static refreshToken=(bodyData:IBodyRefreshToken)=>{

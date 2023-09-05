@@ -1,13 +1,13 @@
 import React, {FC} from 'react'
 import { BsMessenger, BsSearch } from 'react-icons/bs'
 import { useOutletContext } from 'react-router-dom'
-interface IFielChatEmty{
 
+interface IFielChatEmty{
     handleSetIsPopUp:  React.Dispatch<React.SetStateAction<boolean>> 
 }
 const FielChatEmty:FC = () => {
   const {handleSetIsPopUp}= useOutletContext<IFielChatEmty>()
-  
+
   return (
     <section className='flex-1 '>
         <div className='flex justify-center items-center flex-col h-full'>

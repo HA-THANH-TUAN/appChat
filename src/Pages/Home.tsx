@@ -1,6 +1,6 @@
 import React from 'react'
 import EmojiPicker from 'emoji-picker-react';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch } from '../app/hooks/useCustomReduxTookit';
 import { refreshApp as refreshAppAction } from '../features/refreshApp/refreshApp';
 export const Home = () => {
   const dispatch= useAppDispatch()

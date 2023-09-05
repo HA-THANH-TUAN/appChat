@@ -1,5 +1,5 @@
 
-import { BrowserRouter , Routes, Route} from 'react-router-dom';
+import { BrowserRouter , Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 import { Home } from './Pages/Home';
 import LiveStream from './Pages/LiveStream';
 import { Reels } from './Pages/Reels';
@@ -12,30 +12,49 @@ import SignUp from './Pages/SignUp';
 import FieldChat from './Layouts/FieldChat/FieldChat';
 import FielChatEmty from './Layouts/FieldChat/FielChatEmty';
 import CallCScreen from './Pages/CallCScreen';
-
+import Navbar from './Layouts/Navbar/Navbar';
+import useAuth from './Utils/checkAuth';
+import PrivateRoute from './Pages/Private';
+import { useAppSelector } from './app/hooks/useCustomReduxTookit';
+import { selectorIsLogin } from './features/auth/authSlice';
+import MyContextProvider from './app/context/MyContextProvider';
+import { initialContext } from './app/context/context';
 
 function App() {
+  
+  const isLogin = useAppSelector(selectorIsLogin)
+
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/account/sign-up' element={<SignUp/>}></Route >
-          <Route path='/account/sign-in' element={<SignIn/>}></Route >
-          <Route path='/' element={<Private/>}>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/message/inbox/' element={<Message/>}>
-              <Route path='' element={<FielChatEmty/>}></Route>
-              <Route path=':userId' element={<FieldChat/>}></Route>
+    <MyContextProvider initialValue={initialContext}>
+      <div className='flex'>
+        <BrowserRouter>
+          {isLogin && <Navbar/>} 
+          <Routes>
+            <Route path='/account/sign-up' element={<SignUp/>}></Route >
+            <Route path='/account/sign-in' element={<SignIn/>}></Route >
+            
+            <Route path='/' element={<PrivateRoute isAuthenticated={isLogin} outlet={<Home/>} />}/>
+
+            <Route path='/message/:type' element={<PrivateRoute isAuthenticated={isLogin} outlet={<Message/>} /> }>
+              <Route path='' element={<FielChatEmty/>}/>
+              <Route path=':conversationId' element={<FieldChat/>}/>
             </Route>
-            <Route path='/reel' element={<Reels/>}/>
-            <Route path='/live' element={<LiveStream/>}/>
-            <Route path='/profile/:userId' element={<Profile/>}/>
-            <Route path='/call/' element={<CallCScreen/>}/>
-          </Route>
-          <Route path='*' element={<NotFound/>}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+
+            {/* <Route path='/message/inbox/:conversationId' element={<Message/>}/> */}
+
+            <Route path='/reel' element={<PrivateRoute isAuthenticated={isLogin} outlet={<Reels/>}/>} />
+
+            <Route path='/live' element={<PrivateRoute isAuthenticated={isLogin} outlet={<LiveStream/>}/>} />
+
+            <Route path='/call/' element={<PrivateRoute isAuthenticated={isLogin} outlet={<CallCScreen/>}/>} />
+
+            <Route path='/profile/:userId' element={<PrivateRoute isAuthenticated={isLogin} outlet={<Profile/>}/>} />
+
+            <Route path='*' element={<NotFound/>}></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </MyContextProvider>
   );
 }
 

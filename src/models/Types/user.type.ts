@@ -9,7 +9,7 @@ export interface IUser {
     updatedAt: string,
 }
 
-export interface IMetaDataUser {
+export interface IMetaDataUsers {
     pagination:IPagination,
     users:IUser[]
   }

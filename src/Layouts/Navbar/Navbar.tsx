@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState,useContext} from 'react'
 import {NavLink,useLocation, useNavigate} from "react-router-dom"
 
 import {AiFillHome,AiOutlineMenu} from "react-icons/ai"
@@ -13,6 +13,7 @@ import SearchFriend from './SearchFriend/SearchFriend'
 import CreatePost from './CreatePost/CreatePost'
 import Notification from './Notification/Notification'
 import { getCookie } from '../../Utils/setCookie'
+import MyContext from '../../app/context/context'
 
 interface navListItem {
     name:string, url:string[]
@@ -52,6 +53,7 @@ export default function Navbar() {
     const [popUpCreate, setPopUpCreate]= React.useState<boolean>(false)
     const [popUpName, setPopUpName]= React.useState<string>("")
     const nav=useNavigate()
+ 
     
 
     const [outlet, setOulet] =React.useState<string>("")

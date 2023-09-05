@@ -8,27 +8,33 @@ import type { RootState } from "../../app/store";
 
 
 interface IChatState{
-    receiver:IUser | undefined
+    conversationId ?: string,
+    triggerEndScroll : boolean
 }
 
 const initialState : IChatState= {
-    receiver:undefined
+    conversationId : undefined,
+    triggerEndScroll : true
 }
 
 export const chatSlice = createSlice({
     name:"chat",
     initialState,
     reducers:{
-        receiver: (state, {type, payload}:PayloadAction<IUser>)=>{
-            state.receiver=payload
+        setCoversationId: (state, {type, payload}:PayloadAction<string>)=>{
+            state.conversationId=payload
+        },
+        setTriggerEndScroll: (state)=>{
+            state.triggerEndScroll=!state.triggerEndScroll
         }
     }
 })
 
 
 
-export const {receiver}= chatSlice.actions
+export const {setCoversationId ,setTriggerEndScroll}= chatSlice.actions
 
-export const selectReceiver = (state : RootState)=>state.chat.receiver
+export const selectConversationId = (state : RootState)=>state.chat.conversationId
+export const selectTriggerEndScroll = (state : RootState)=>state.chat.triggerEndScroll
 
 export default chatSlice.reducer

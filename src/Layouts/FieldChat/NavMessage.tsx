@@ -3,21 +3,15 @@ import { BsCameraVideo } from 'react-icons/bs'
 import { FiPhoneCall } from 'react-icons/fi'
 import { PiWarningCircle } from 'react-icons/pi'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useAppSelector } from '../../app/hooks'
-import { selectReceiver } from '../../features/chat/chatSlice'
 
 interface INavMessage {
-  name?:string
+  name?:string,
+  statusUser:boolean
 }
 
 const NavMessage:React.FC<INavMessage> = ({name}) => {
 
   const nav=useNavigate()
-  const dataReceiver = useAppSelector(selectReceiver)
-  const {userId:userIdPrams}=useParams<string>()
-
-  console.log("dataReceiver::",dataReceiver)
-
   return (
       <section>
         <div className='h-[80px] px-3 border-b flex items-center'>
@@ -38,7 +32,7 @@ const NavMessage:React.FC<INavMessage> = ({name}) => {
                     ><FiPhoneCall/></li>
                     <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer' 
                       onClick={()=>{
-                        nav(`/call?video=false&receiverId=rtyfftftdcgyt`)
+                        nav(`/call?video=false&receiverId=rtyfftftdcgyt`) 
                       }}
                     ><BsCameraVideo/></li>
                     <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer'><PiWarningCircle/></li>

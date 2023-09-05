@@ -5,8 +5,8 @@ import { useQuery } from 'react-query'
 import UserApi from '../../../apis/userApi'
 import { CgClose } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../../../app/hooks'
-import { receiver } from '../../../features/chat/chatSlice'
+import { useAppDispatch } from '../../../app/hooks/useCustomReduxTookit'
+
 
 interface IAreaResultSearch{
 
@@ -65,9 +65,8 @@ const AreaResultSearch:React.FC<IAreaResultSearch> = ({}) => {
                             </div>
                             </section>
                             <button onClick={(e)=>{
-                                e.stopPropagation()
-                                handleChangePageMessage(user._id);
-                                    dispatch(receiver(user))
+                                    e.stopPropagation()
+                                    handleChangePageMessage(user._id);
                                 }}  
                                 className='text-white text-sm px-[10px] font-medium py-2 rounded-md hover:bg-orange-500 transition-colors bg-blue-500'
                             >Message</button>
