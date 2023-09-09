@@ -6,10 +6,20 @@ const {getProfile: getProfileCotroller} =require("../controllers/user.controller
 
 const router= express.Router()
 
-router.get("/get-user/",handleError(getUserController))
+// ----------------------GET-------------------------------
+router.get("/get-users/",handleError(getUserController))
+
 router.get("/get-profile/:userId",handleError(getProfileCotroller))
 
 router.get("/add-friend", handleError(addFriendController))
+
+
+
+
+
+
+
+
 
 router.get("/test-middleware", async( req, res, next)=>{
     

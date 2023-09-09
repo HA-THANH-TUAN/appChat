@@ -14,7 +14,6 @@ class SucessResponse {
         this.metadata=metadata;
     }
     send(res){
-        console.log("statusstatusstatus")
         res.status(this.status).json({
             message: this.mesage,
             status: this.status,
@@ -26,7 +25,6 @@ class SucessResponse {
 
 class OK extends SucessResponse{
     constructor(mesage=messageSucess.OK, metadata= null) {
-        console.log(">>>>>")
         super(mesage,STATUS_CODE.OKE, metadata)
     }
 }

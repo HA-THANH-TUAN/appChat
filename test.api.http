@@ -4,8 +4,8 @@ POST {{host}}/authentication/sign-up HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Nguyen Thi Hong Tam",
-    "email": "s2nguyenthihongtam2s@gmail.com",
+    "name": "Nguyen Thi Hoa",
+    "email": "s2nguyenthihoa2s@gmail.com",
     "password": "123456789"
 }   
 
@@ -15,8 +15,8 @@ POST {{host}}/authentication/sign-in HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Nguyen Thi My",
-    "email": "s2nguyenthimy2s@gmail.com",
+    "email": "s2hathanhtuan2s@gmail.com",
+    # "email": "s2nguyenthihonghuong2s@gmail.com", 
     "password": "123456789"
 }
 
@@ -57,7 +57,33 @@ content-type: application/json
 
 {
     "refreshToken": "eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTZhYzMyOTdiOWQ0MDVlZjA3Y2U5YSIsImRldmljZUlkIjoiZmNjNmYzNjZiNWU1YzQ0YjJmYzg0Yjk3Iiwicm9sZSI6W10sImlhdCI6MTY5Mjg3NjkyMSwiZXhwIjoxNjkyODc3MTYxfQ.hTKGiFoz0rT5OITxwdxaWo_pFI8Sc4NJCI7LCGzX3NLb0X2DZismMSKoiBM59GEmRoOLOpZHJWQ1cXObHkX5HPLJSxCb3obDOVH_SwenmHCICNsy34N17Sv5EjaLghNTFkzQRK3qR1EEC1hP6390-UUw776BhbvssUv5mvQW78ZRE_9K_-DBAzbKFTiqnlLsKFuh9W0wIc2X-1CZx6PazzNlmzdvk9KLzwr8HZ6jy-xhPaPAR1xhs9o0v8uLdyNxPrwKe04lnqWneJWIUg2PXk__IX0menTyLnj6QtKBBAOVJ-fCsSioVX2WPrGfNrXPpD90YmieU2kvYArpNdpm0g"
+} 
+
+
+###
+POST {{host}}/chat/add-conversation HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTdiNWQzNTIyOWIxNTY3MzY2ODMwNCIsImRldmljZUlkIjoiY2Q0YThhMTVjZTBmNjc4ZWVhYmMyZjVjIiwicm9sZSI6W10sImlhdCI6MTY5MzUzNDk2MiwiZXhwIjoxNjkzNTQyMTYyfQ.Zf9Gs6W82yqDMJ9mEiM8Ec5YD4CBcVnqJg3XjzJfpP_TsQgcp9DZV8nT-7xzySmcpod3-JTKxejJttGflxzTLnyDWUBffE_j4PbZd_C0bIufvxDSXckj4ubn8cLltFRawhmBpgti-OgC6_ipfmzyIVNHpLPuwQ73kOj9-j9vWNKmZ7zV_ZRmjchan0RpDi7aYwF1eSbsbaKlrNHWYSiqZIAgmLQISvywcdiq5SuClmrwJnHtXDI0HRF0qJDuzxeK4wc9_d1PAqUNfzECshFrq0vMovXLGGmQrrWs-LWBSddE_dIWmnAXFDCaS_eGIxt4TtM43me5Fq9YrC_FBYaCbA
+
+{
+    # "members": ["64e857c29c09ab92f345afd9"]
+    "members": ["64e7b62c5229b15673668307"]
 }
+
+
+###
+GET  {{host}}/chat/get-conversations HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTdiNWQzNTIyOWIxNTY3MzY2ODMwNCIsImRldmljZUlkIjoiY2Q0YThhMTVjZTBmNjc4ZWVhYmMyZjVjIiwicm9sZSI6W10sImlhdCI6MTY5MzUzNDk2MiwiZXhwIjoxNjkzNTQyMTYyfQ.Zf9Gs6W82yqDMJ9mEiM8Ec5YD4CBcVnqJg3XjzJfpP_TsQgcp9DZV8nT-7xzySmcpod3-JTKxejJttGflxzTLnyDWUBffE_j4PbZd_C0bIufvxDSXckj4ubn8cLltFRawhmBpgti-OgC6_ipfmzyIVNHpLPuwQ73kOj9-j9vWNKmZ7zV_ZRmjchan0RpDi7aYwF1eSbsbaKlrNHWYSiqZIAgmLQISvywcdiq5SuClmrwJnHtXDI0HRF0qJDuzxeK4wc9_d1PAqUNfzECshFrq0vMovXLGGmQrrWs-LWBSddE_dIWmnAXFDCaS_eGIxt4TtM43me5Fq9YrC_FBYaCbA
+
+
+
+###
+GET  {{host}}/chat/get-conversations-message/64f0040caf7513894811e559 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTg1MWQzODExMzFjNmJhMDdlMTU2YSIsImRldmljZUlkIjoiOTI1MGFiM2E0Nzk1MTQ2N2RkNTZmNmY3Iiwicm9sZSI6W10sImlhdCI6MTY5MzYzMjE1OSwiZXhwIjoxNjkzNjM5MzU5fQ.Pod6jB3YV2O0K8g_WtIA-PhyMbah_HEIqb9XfoMzBlD8-tmxApBsGy5fvyeGZ2HljleqINd8RFLDLhP9gb4Gw7eNNgaIiEvvc0l_fyT0NeNnX6uaPeFuZ8uHD4awPzy07_hsTyrYw46wRxm0Fx_GIbsvK5Jgk5oJurkw9sNw2b-SkQFLYjBYTlr4KUlEag5bd8jwZfftWNOPthJNut5_rx0ycuRPkxgu3xreoGMgdKz-PeeSW9lFPTam_jUi-1YItrAinnBbvaGiFwWu4nRGcxB7yr6J8BPsGBiBH_P5-x3YFzfb1j6O7Is4n0sO65jNMcu_e8-tKBa_x1lnpl4iAw
+
+
 
 
 

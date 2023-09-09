@@ -5,7 +5,8 @@ const { signUp : signUpService, signIn: signInService, signOut: signOutService ,
 class Authentication {
 
    async signUp(req, res){
-      const resultService= await signUpService(req.body)
+      const resultService= await signUpService(req.body,res)
+   
       new Created("signup success", resultService).send(res)
    }
 

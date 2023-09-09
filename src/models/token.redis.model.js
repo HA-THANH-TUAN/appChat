@@ -1,5 +1,5 @@
 const client =require("../models/redis.model")
-const { timeExpiredRefreshToken} = require("../utils/auth/auth.utils")
+const { TIME_EXPIRED_REFRESHTOKEN} = require("../utils/auth/auth.utils")
 
 const addTokenRedis = async (name, { refreshToken , publicKey})=>{
     const fieldsAdded = await client.hSet(
@@ -9,7 +9,7 @@ const addTokenRedis = async (name, { refreshToken , publicKey})=>{
             publicKey
         },
     )
-    const resultSetTime =  await client.expire(name, timeExpiredRefreshToken)
+    await client.expire(name, TIME_EXPIRED_REFRESHTOKEN)
     return fieldsAdded
 }
 

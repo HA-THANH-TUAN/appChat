@@ -5,13 +5,14 @@ const createPriPubKey = require("../utils/auth/createAsymmetricKeyPair");
 const { createTokenPair, verifyTokenAccessToken } = require("../utils/auth/auth.utils");
 const {uid}=require("uid")
 const { addTokenRedis } = require("../models/token.redis.model");
-const client = require("../configs/redis.config");
+const client = require("../models/redis.model");
 const jwt  = require("jsonwebtoken");
 
 
 class Authentication {
-
-    async signUp(data){
+    
+ 
+    async signUp(data,res){
         const checkExistEmail =await UserModel.findOne({ email: data.email }).exec();
         const deviceId=uid(24)
         if(!checkExistEmail){
@@ -19,7 +20,9 @@ class Authentication {
             const resultCreate = await UserModel.create({...data, password:passwordHash})
             const {name, email , id , role}=resultCreate // data after save MongoDB.
             const tokens=await Authentication.createTokenInRedis({ id, deviceId , role})
-            return {user:{name, email, id}, tokens}
+            res.cookie('access_token', tokens.accessToken, { httpOnly: true });
+            res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+            return {user:{name, email, id:id}, tokens}
         }
         throw new ConflictResponse()   
     }
@@ -32,6 +35,7 @@ class Authentication {
             if(isCheckPassword){
                 const {name, email , id ,role}=userFromDatabase // data get from MongoDB.
                 const tokens =await Authentication.createTokenInRedis({id, deviceId ,role})
+                console.log("Have user login !!! ")
                 return {user:{name, email, id}, tokens}
             }
         }
@@ -41,27 +45,25 @@ class Authentication {
     async signOut(accessToken){
         const resultDecodePayload= jwt.decode(accessToken, {complete: true}).payload; // decode get id and deviceId
         if(resultDecodePayload){
+            console.log(">>>>> chuan bi decode")
             const {id, deviceId}=resultDecodePayload
             const resultDelete =await client.del(`tokens:${id}:${deviceId}`)
             if(resultDelete>0){
                 return null
             }
+            console.log(">>>>>  decode")
         }
         throw new BadResponse()
     }
 
     async refreshToken(refreshToken){
         const resultDecodeRefreshToken= jwt.decode(refreshToken, {complete:true})
-        // console.log("resultDecodeRefreshToken:::",resultDecodeRefreshToken)
         if(resultDecodeRefreshToken===null){
             throw new BadResponse()
         }
         const {id, deviceId}= resultDecodeRefreshToken.payload
         const tokensRedis= await client.hmGet(`tokens:${id}:${deviceId}`, ["refreshToken", "publicKey"])
-
-        // console.log("tokensRedis::::",tokensRedis)
         const isCheckExist = tokensRedis.some((v)=>v===null)
-        // console.log("isCheckExist::::",isCheckExist)
         if(isCheckExist){
             throw new BadResponse()
         }    
@@ -91,7 +93,6 @@ class Authentication {
         if(isRefreshToken===undefined || isRefreshToken===false){
             if(resultRedis!==numberField){
                 //Error save redis
-                console.log("Redis Not Update !!! ")
                 throw new BadResponse()   
             }
         }

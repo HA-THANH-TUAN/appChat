@@ -8,7 +8,6 @@ class User {
             const userId=req.query?.userId
             const page=req.query?.page
             const limit=req.query?.limit
-            console.log(req.query)
             if(userId){
                 const resultService =await getUserService(userId,page ,limit )
                 new OK(undefined,resultService).send(res)
@@ -19,8 +18,6 @@ class User {
 
     async getProfile (req, res){
         const {userId} = req.params
-
-        console.log("userId==>",userId)
         const resultService= await getProfileService(userId)
         new OK(undefined,resultService ).send(res)
     }

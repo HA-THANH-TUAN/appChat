@@ -1,7 +1,11 @@
+
+
 const jwt = require("jsonwebtoken");
-const client = require("../configs/redis.config");
+const client = require("../models/redis.model");
 const { BadResponse, Unauthorized } = require("../core/error.response");
 const { verifyTokenAccessToken } = require("../utils/auth/auth.utils");
+
+const algorithmAccessToken= process.env.DEV_ALIGORITHM_ACCESSTOKEN
 
 const verifyUser = async(req,res, next)=>{
     // middleWareCheck User
@@ -15,11 +19,12 @@ const verifyUser = async(req,res, next)=>{
         
         if(publicKeyFromRedis===null){
             // When token deleted in Redis
-            throw new Unauthorized("login")
+            throw new Unauthorized("login again")
         }
-
-        const resultverifyTokenAccessToken = verifyTokenAccessToken(accessToken, publicKeyFromRedis, {algorithm:["RS256"]})
+        
+        const resultverifyTokenAccessToken = verifyTokenAccessToken(accessToken, publicKeyFromRedis, {algorithm:[algorithmAccessToken]})
         if(resultverifyTokenAccessToken===true){
+            req.userId=id
             next();
             return null
         }
@@ -31,7 +36,7 @@ const verifyUser = async(req,res, next)=>{
             throw new Unauthorized ()
         }
     }
-    throw new BadResponse ()
+    throw new Unauthorized("login again")
   
 }
 

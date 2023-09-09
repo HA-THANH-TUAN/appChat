@@ -29,32 +29,22 @@ const COLECTION_NAME="Messages"
 // }
 
 const messageSchema  = Schema({
-    sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    receiverId:{
-        type:String,
-        enum: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User' } ,{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
-
-    },
     
-    type: {
-        type:String,
-        enum:["personal", "group"],
-        default: "personal",
-    },
+    conversationId: { type: Schema.Types.ObjectId, ref: 'Conversations' },
+    senderId: { type: Schema.Types.ObjectId, ref: 'Users' },
     peopleWacthed:[
         {
-            userId:{
-               type: mongoose.Schema.Types.ObjectId,
-               ref: 'User'
+            watchedId:{
+               type: Schema.Types.ObjectId,
+               ref: 'Users'
             },
             emoji: { type: String ,default:null},
             timestamp: { type: Date, default: Date.now }
         }
     ],
-    message_type: {
+    message: {
         content: "string",
-        type: {type:String ,enum : ["text", "image", "video", "audio", "notify_call"], default:"text"},
-        url:{type:String, default:null}
+        type: {type:String ,enum : ["text", "notify_call"], default:"text"}
     },
     //  Group
     timestamp: { type: Date, default: Date.now },
@@ -62,6 +52,6 @@ const messageSchema  = Schema({
     timestamps: true,
     collection: COLECTION_NAME
 });
-
-module.exports= model(DOCUMENT_NAME, messageSchema)
+const MessageModel= model(DOCUMENT_NAME, messageSchema)
+module.exports= MessageModel
 

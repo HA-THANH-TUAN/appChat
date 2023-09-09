@@ -6,13 +6,9 @@ class User {
     async getUser(userId, page, limit){
         page=Number(page)
         limit=Number(limit)
-
         const totalUsers = await UserModel.countDocuments()
-
         const listUser=await UserModel.find({_id:{ $ne:userId }} ,"-password -role -message -__v").skip((page-1)*limit).limit(limit).lean()
-
         const totalPage = Math.ceil(((totalUsers-1)/limit))
-
         return {
             pagination:{
                 total: totalPage,
@@ -24,9 +20,7 @@ class User {
     }
 
     async getProfile(userId){
-        console.log("userId". userId)
         const resultProfile =await UserModel.findOne({_id:userId },"-password -role -status -__v").lean()
-        console.log("resultProfileSer:::", resultProfile)
         return resultProfile
     }
 }
