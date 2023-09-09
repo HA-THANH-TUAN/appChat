@@ -19,6 +19,7 @@ import { useAppSelector } from './app/hooks/useCustomReduxTookit';
 import { selectorIsLogin } from './features/auth/authSlice';
 import MyContextProvider from './app/context/MyContextProvider';
 import { initialContext } from './app/context/context';
+import AreaCall from './Pages/AreaCall';
 
 function App() {
   

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import refreshAppReducer from "../features/refreshApp/refreshApp"
 import chatReducer from "../features/chat/chatSlice"
+import callReducer from "../features/call/callSlice"
 import authReducer from "../features/auth/authSlice"
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
     auth:authReducer,
     refreshApp: refreshAppReducer,
     chat: chatReducer,
+    call: callReducer,
   }
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself

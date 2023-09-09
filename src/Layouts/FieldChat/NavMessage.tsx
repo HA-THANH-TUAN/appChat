@@ -6,10 +6,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 interface INavMessage {
   name?:string,
-  statusUser:boolean
+  statusUser:boolean,
 }
 
 const NavMessage:React.FC<INavMessage> = ({name}) => {
+   
+  const {conversationId}= useParams<string>()
 
   const nav=useNavigate()
   return (
@@ -27,12 +29,17 @@ const NavMessage:React.FC<INavMessage> = ({name}) => {
                   <ul className='flex'>
                     <li className='mx-2 text-2xl flex justify-center items-center hover:opacity-70 cursor-pointer' 
                       onClick={()=>{
-                        nav("/call")
+                        if(conversationId){
+                          window.open(`http://localhost:3000/call?hasVideo=false&&roomId=${conversationId}`)
+                        }
+                        
                       }}
-                    ><FiPhoneCall/></li>
+                      ><FiPhoneCall/></li>
                     <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer' 
                       onClick={()=>{
-                        nav(`/call?video=false&receiverId=rtyfftftdcgyt`) 
+                        if(conversationId){
+                          window.open(`http://localhost:3000/call?hasVideo=true&&roomId=${conversationId}`)
+                        }
                       }}
                     ><BsCameraVideo/></li>
                     <li className='mx-2 text-3xl flex justify-center items-center hover:opacity-70 cursor-pointer'><PiWarningCircle/></li>

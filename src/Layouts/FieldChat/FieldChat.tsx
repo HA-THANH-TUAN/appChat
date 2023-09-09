@@ -15,7 +15,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import { getDataLocalStorage } from '../../Utils/getDataLocalStorage'
 import ChatApi from '../../apis/chatApi'
 import MyContext from '../../app/context/context'
-import { useAppSelector } from '../../app/hooks/useCustomReduxTookit'
+import { useAppDispatch, useAppSelector } from '../../app/hooks/useCustomReduxTookit'
 import { selectorUser } from '../../features/auth/authSlice'
 
        
@@ -50,7 +50,8 @@ const FieldChat = () => {
     },
   })
 
-  console.log("=====================mySelf===================",mySelf)
+  // console.log("=====================mySelf===================",mySelf)
+
   
   const handleSendMessage = ()=>{
     if(mySelf !==undefined){
@@ -66,6 +67,8 @@ const FieldChat = () => {
       }
       return undefined
     }
+    console.log("mySoket:::", ctx?.socketIO)
+    console.log("mySelf:::", mySelf)
       alert("yet upload data Myself in redux !")
   }
 

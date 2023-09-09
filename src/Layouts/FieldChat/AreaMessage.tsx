@@ -8,6 +8,7 @@ import { useAppSelector } from '../../app/hooks/useCustomReduxTookit'
 import { selectorUser } from '../../features/auth/authSlice'
 import { selectTriggerEndScroll } from '../../features/chat/chatSlice'
 import Loading from '../../Components/Loading'
+import classNames from 'classnames'
 
 
 interface IAreaMessage{
@@ -19,13 +20,8 @@ const AreaMessage:React.FC<IAreaMessage>= () => {
   const mySelf = useAppSelector(selectorUser)
   const changeScrollEnd = useAppSelector(selectTriggerEndScroll)
   const {conversationId} = useParams<string>()
+  const [isScrollFirst, setIsScrollFirst]= useState<boolean>(true)
   const scrollableRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollableRef.current) {
-      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
-    }
-  }, [changeScrollEnd]);
   
   const queryMessage  = useQuery({
     queryKey:["conversationMessage", conversationId],
@@ -33,15 +29,50 @@ const AreaMessage:React.FC<IAreaMessage>= () => {
     enabled : conversationId !==undefined
   })
 
-
-  console.log("queryMessage.status===loading", queryMessage)
-
+  useEffect(() => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+      setIsScrollFirst(false)
+    }
+  }, [changeScrollEnd,queryMessage.status,conversationId]);
   
+ 
+  function isElementAtTop(element: HTMLDivElement) {
+    const elementRect = element.getBoundingClientRect();
+    return elementRect;
+    return elementRect.top <= 80;
+  }
+
+  // useEffect(()=>{
+  //   const element =scrollableRef.current
+  //   if(element !==null){
+  //     element.onscroll=()=>{
+  //       const scrollTop = element.scrollTop;
+  //       if(scrollTop===0 && !isScrollFirst){
+  //         console.log("====>", "top")
+  //       }
+  
+  //     }
+
+  //   }
+  // },[])
+  
+
+
+  // console.log("queryMessage.status===loading", queryMessage)
+
+  const isLoading= queryMessage.status==="loading"
   return (
-        <section ref={scrollableRef} className='flex-1 h-full overflow-x-hidden'>
+        <section ref={scrollableRef} className={classNames('flex-1 h-full overflow-x-hidden ',
+          {
+            "flex items-center justify-center bg-[#ececec1a]" :isLoading
+    
+            
+          }
+        )}>
           <div>
-            {queryMessage.status==="loading" ? 
-            <Loading/>
+            { isLoading? 
+            <Loading bg='#ececec1a' />
             :queryMessage.data?.metadata?.map(
               (message:any)=>{
                 return <BoxMessage key={message._id} content={message.message?.content} isMyMessage={message.senderId == mySelf?.id}/>

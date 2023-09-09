@@ -4,7 +4,10 @@ import { Navigate } from 'react-router-dom';
 import MyContext from '../app/context/context';
 import { useQuery, useQueryClient } from 'react-query';
 import ChatApi from '../apis/chatApi';
-import AudioBellMessage from '../Components/AudioBellMessage';
+import PopUpRequestCall from '../Layouts/PopUpRequestCall/PopUpRequestCall';
+import { useAppDispatch } from '../app/hooks/useCustomReduxTookit';
+import { tooglePopUpNotifyReceiveCall } from '../features/call/callSlice';
+import { setTriggerEndScroll } from '../features/chat/chatSlice';
 
 export type PrivateRouteProps = {
   isAuthenticated :boolean,
@@ -21,9 +24,11 @@ const PrivateRoute = ({ isAuthenticated , redirectPath="/account/sign-in", outle
 
   const [conversationId, setConversationId]=useState<string>("")
 
+  const dispatch = useAppDispatch()
+
   const ctx = useContext(MyContext)
   const  createConnectionIO =()=>  {
-    const access_token= Cookies.get("access_token")
+    const access_token= Cookies.get("refresh_token")
     if (access_token!==undefined) {
       if(ctx?.socketIO){
         ctx.socketIO.auth={access_token}
@@ -39,7 +44,7 @@ const PrivateRoute = ({ isAuthenticated , redirectPath="/account/sign-in", outle
   const ref =useRef( ()=>{
     const audio =new Audio()
         audio.src=process.env.PUBLIC_URL + '/audio/MessengerBell.mp3';
-        audio.load()
+        audio.preload="auto"
         audio.play()
   } )
 
@@ -54,46 +59,47 @@ const PrivateRoute = ({ isAuthenticated , redirectPath="/account/sign-in", outle
   useEffect(() => {
     if(isAuthenticated){
       createConnectionIO()
+      ctx?.socketIO.on("connected", ()=>{
+        console.log("IO connected")
+      })
       ctx?.socketIO.on("message", (data)=>{
         console.log("NHẬN TIN NHẮN:::", data);
-
-        // const dataQueryMessage:any = queryClient.getQueryData([`conversationMessage`, data.conversationId]) ?? []
-        // console.log("dataQueryMessage:::",dataQueryMessage)
-
-       
-
+        ref.current()
         queryClient.setQueryData([`conversationMessage`, data.conversationId], (presentData:any)=>{
-
-          console.log("presentData ===>", presentData)
-
           if(presentData==undefined){
             setConversationId(data.conversationId)
           }
           else{
             if(presentData.metadata){
-              console.log("===>zo dc set")
+              dispatch(setTriggerEndScroll())
               return {...presentData,metadata : [...presentData.metadata, data]}
             }
           }
         })
-        // if(scrollableRef.current !==null){
-        //   setA((state)=>(!state));
-        // }
-
-        ref.current()
-        
-        // if(refAudio?.current !==null){
-        //   refAudio.current.play()
-
-        // }
-        // ctx.eBellMessage.play()
       })
   
       ctx?.socketIO.on("responseSendMessage", (data)=>{
-        const dataQueryMessage:any = queryClient.getQueryData([`conversationMessage`, data.conversationId])  ?? []  
+        const dataQueryMessage:any = queryClient.getQueryData([`conversationMessage`, data.conversationId])  ?? [] 
+        queryClient.setQueryData([`conversationMessage`, data.conversationId], (presentData:any)=>{
+          if(presentData==undefined){
+            setConversationId(data.conversationId)
+          }
+          else{
+            if(presentData.metadata){
+              dispatch(setTriggerEndScroll())
+              return {...presentData,metadata : [...presentData.metadata, data]}
+            }
+          }
+        }) 
+        
         // setA((state)=>(!state));
         // queryClient.setQueryData([`conversationMessage`,data.conversationId], {...dataQueryMessage, metadata: [...dataQueryMessage?.metadata , data]})
       })
+
+      ctx?.socketIO.on("requestCall", (data)=>{
+          console.log("has user call:::", data)
+          dispatch(tooglePopUpNotifyReceiveCall(true))
+      } )
 
     }
   
@@ -109,6 +115,10 @@ const PrivateRoute = ({ isAuthenticated , redirectPath="/account/sign-in", outle
     return <Navigate to={redirectPath} replace />;
   }
   return <>
+    <PopUpRequestCall/>
+    {/* <audio muted controls preload='auto' ref={refAudio} >
+      <source src={process.env.PUBLIC_URL + '/audio/MessengerBell.mp3'} />
+    </audio> */}
     {outlet}
   </> ;
 };

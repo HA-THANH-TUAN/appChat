@@ -13,9 +13,9 @@ const NavSendMessage:React.FC<INavSendMessage> = ({handleSendMessage , handleSet
     const [visibleSend, setVisibleSend]= useState<boolean>()
 
     const handleOnchangeInput =(e: React.ChangeEvent<HTMLInputElement>)=>{
-        const vl=e.target.value
-        handleSetMessage(vl)
-        setVisibleSend( vl==="" ? false : true )
+      const vl=e.target.value
+      handleSetMessage(vl)
+      setVisibleSend( vl==="" ? false : true )
     }
 
     const handleSubmit = (e:React.KeyboardEvent<HTMLInputElement>)=>{
@@ -24,7 +24,6 @@ const NavSendMessage:React.FC<INavSendMessage> = ({handleSendMessage , handleSet
         handleSendMessage?.()
         handleSetMessage("")
       }
-
     }
 
     return (

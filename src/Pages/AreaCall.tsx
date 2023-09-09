@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CallUser = () => {
+const AreaCall = () => {
   return (
     <div className=''>
 
@@ -8,4 +8,4 @@ const CallUser = () => {
   )
 }
 
-export default CallUser
+export default AreaCall
