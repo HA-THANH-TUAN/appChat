@@ -1,7 +1,8 @@
 const jwt =require("jsonwebtoken");
 const conversationModel = require("../../models/conversation..model");
 const client = require("../../models/redis.model");
-const MessageModel = require("../../models/message.model")
+const MessageModel = require("../../models/message.model");
+const { uid } = require("uid");
 const algorithmRefreshToken= process.env.DEV_ALIGORITHM_REFRESHTOKEN
 const serviceSocketOI = (io)=>{
     
@@ -31,7 +32,9 @@ const serviceSocketOI = (io)=>{
       const resultVerify=jwt.verify(access_token, publickey,{algorithms:["PS256"]} )
       // socket.id=resultDecode.id
       // console.log("resultVerify:::",resultVerify)
-      socket.id=resultVerify.id
+      const session = uid(20)
+      socket.userId = `${resultVerify.id}`
+      socket.id=`${resultVerify.id}/${resultVerify.deviceId}/${session}`
       next()
       console.log("next==>")
     } catch (error) {
@@ -49,7 +52,7 @@ const serviceSocketOI = (io)=>{
       // Add conversation ..... start
       const resultCoversationsBd = await conversationModel.find({
         members: {
-            $elemMatch: { userId: socket.id }
+            $elemMatch: { userId: socket.userId }
           }
         },"-__v -name -order -statusConversation -type -members").lean()
         const listRoomId = resultCoversationsBd.map((conversation)=>(conversation._id.toString()))
@@ -68,15 +71,30 @@ const serviceSocketOI = (io)=>{
       // Add conversation ..... end
 
     } 
-    socket.on("requestCall", async({sessionRTC, roomId})=>{
-      if(sessionRTC){
-        console.log("server receive sessionRTC",sessionRTC)
-        console.log("server receive roomId",roomId)
-        socket.to(roomId).emit("requestCall", {
-          sessionRTC:sessionRTC
-        })
+    socket.on("requestCall", async({peerId, roomId})=>{
+      if(peerId){
+        const socketIdItsSelf = socket.id.split("/")[0]
+        const roomsKey =io.sockets.adapter.rooms.get(roomId).keys()        
+        for (const iterator of roomsKey) {
+          if(!iterator.includes(socketIdItsSelf)){
+            console.log("iterator:::",iterator)
+            socket.to(iterator).emit("requestCall", {
+              peerId:peerId,
+              roomId:roomId,
+              socketCaller:socket.id
+            })
+          } 
+        }
       }
+    })
 
+    socket.on("acceptCalling", async()=>{
+      console.log("acceptCalling socketID" , socket.id)
+    })
+        
+    socket.on("rejectCalling", async({roomId,socketCaller})=>{
+      console.log("rejectCalling", socket.id)
+      io.to(socketCaller).emit("rejectCalling")
     })
         
         
@@ -98,7 +116,7 @@ const serviceSocketOI = (io)=>{
       try {
         const resultInsert= await MessageModel.create({
           conversationId:roomId,
-          senderId:socket.id,
+          senderId:socket.userId,
           message:{
             content: message,
           }
