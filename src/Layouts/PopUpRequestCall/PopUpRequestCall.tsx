@@ -1,9 +1,22 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useContext,FC,useState} from 'react'
 import {IoClose} from "react-icons/io5"
 import { IoCallSharp } from 'react-icons/io5'
 import { useAppDispatch, useAppSelector } from '../../app/hooks/useCustomReduxTookit'
 import { selectHasSignalCall, tooglePopUpNotifyReceiveCall } from '../../features/call/callSlice'
-const PopUpRequestCall = () => {
+import MyContext from '../../app/context/context'
+import { IRequestCall } from '../../Pages/Private'
+import { useNavigate } from 'react-router-dom'
+
+
+
+interface IPopUpRequestCall {
+    dataRequestCall:IRequestCall
+}
+
+
+const PopUpRequestCall: FC<IPopUpRequestCall> = ({dataRequestCall}) => {
+    const ctx= useContext(MyContext) 
+    const socketIO = ctx?.socketIO
   useEffect(() => {
     // const audio = new Audio(process.env.PUBLIC_URL + '/audio/FacebookMessengerCall.mp3')
     // audio.loop=true
@@ -11,24 +24,38 @@ const PopUpRequestCall = () => {
     // audio.play()
   
     // return () => {
-    //   second
-    // }
-  }, [])
+        //   second
+        // }
+
+   
+
+    
+    }, [])
+
+
+    const nav= useNavigate()
+    
+    
   
   const signalCalling =useAppSelector(selectHasSignalCall)
   const dispatch= useAppDispatch()
-
   const handleRejectCall =  ()=>{
     dispatch(tooglePopUpNotifyReceiveCall(false))
     // ----- send message to server to save massage missed call
+    if(socketIO){
+        socketIO.emit("rejectCalling", {roomId: dataRequestCall.roomId,socketCaller:dataRequestCall.socketCaller})
+    }
     console.log("handleRejectCall:::",handleRejectCall)
     
 }
 const hanldeAcceptCall =  ()=>{
-
+    if(socketIO){
+        window.open(`http://localhost:3000/call?hasVideo=false&roomId=${dataRequestCall.roomId}&conversationStatus=start`)
+        socketIO.emit("acceptCalling", dataRequestCall)
+        
+    }
       // ----- send message to server to save massage accept call
     console.log("hanldeAcceptCall:::",hanldeAcceptCall)
-
   }
   return (
     <>

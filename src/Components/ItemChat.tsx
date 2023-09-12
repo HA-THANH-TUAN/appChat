@@ -11,7 +11,7 @@ interface IItemChat{
     isSelected ?: boolean,
 }
 const ItemChat:React.FC<IItemChat> = ({name="HA THANH TUAN", isSelected=false,isOffline=true, isTurnOnNotify=false, timeOffline="2d", onClick}) => {
-    console.log("isSelectedisSelected:::",isSelected)
+
   return (
     <div className={classNames('px-4 py-2',{
         "bg-zinc-300 pointer-events-none": isSelected,

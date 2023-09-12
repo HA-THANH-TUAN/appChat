@@ -3,6 +3,7 @@ import refreshAppReducer from "../features/refreshApp/refreshApp"
 import chatReducer from "../features/chat/chatSlice"
 import callReducer from "../features/call/callSlice"
 import authReducer from "../features/auth/authSlice"
+import notifyReducer from "../features/notify/notifySlice"
 
 export const store = configureStore({
   reducer:{
@@ -10,6 +11,7 @@ export const store = configureStore({
     refreshApp: refreshAppReducer,
     chat: chatReducer,
     call: callReducer,
+    notify: notifyReducer,
   }
 })
 // Infer the `RootState` and `AppDispatch` types from the store itself

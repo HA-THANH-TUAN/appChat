@@ -1,30 +1,20 @@
-import React, { useEffect, useRef, useState , useContext } from 'react'
+import React, { useState , useContext } from 'react'
 
-
-// import { useAppDispatch, useAppSelector } from '../../app/hooks'
-// import { useDispatch } from 'react-redux'
 import NavMessage from './NavMessage'
 import AreaMessage from './AreaMessage'
 import NavSendMessage from './NavSendMessage'
-// import { useAppSelector } from '../../app/hooks/useCustomReduxTookit'
-// import { selectConversationId } from '../../features/chat/chatSlice'
 import { useParams } from 'react-router-dom'
-import { useQuery, useQueryClient } from 'react-query'
-// import UserApi from '../../apis/userApi'
-// import { socket } from '../MainPrivate/MainPrivate'
-import { getDataLocalStorage } from '../../Utils/getDataLocalStorage'
+import { useQuery } from 'react-query'
 import ChatApi from '../../apis/chatApi'
 import MyContext from '../../app/context/context'
-import { useAppDispatch, useAppSelector } from '../../app/hooks/useCustomReduxTookit'
+import { useAppSelector } from '../../app/hooks/useCustomReduxTookit'
 import { selectorUser } from '../../features/auth/authSlice'
-
-       
-
 
 const FieldChat = () => {
   const ctx = useContext(MyContext)
   const [message, setMessage] = useState<string>("")
   const {conversationId}=useParams<string>()
+
   const [receiver, setReceiver] = useState<any>(undefined)
   const mySelf= useAppSelector(selectorUser)
 
@@ -48,11 +38,7 @@ const FieldChat = () => {
         }
       }
     },
-  })
-
-  // console.log("=====================mySelf===================",mySelf)
-
-  
+  })  
   const handleSendMessage = ()=>{
     if(mySelf !==undefined){
       if(conversationId !==undefined){
@@ -67,8 +53,6 @@ const FieldChat = () => {
       }
       return undefined
     }
-    console.log("mySoket:::", ctx?.socketIO)
-    console.log("mySelf:::", mySelf)
       alert("yet upload data Myself in redux !")
   }
 

@@ -1,6 +1,10 @@
 import React, {useContext,useEffect,useState,useRef} from 'react'
 
 import MyContext from '../app/context/context'
+import Peer from 'peerjs'
+import { uid } from 'uid'
+
+
 
 export const Test = () => {
     const ctx =useContext(MyContext)
@@ -14,12 +18,7 @@ export const Test = () => {
       const offer  = JSON.parse(value)
 
       const handleRemote = async()=>{
-        const a= await ctx?.peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
-        const answer  = await ctx?.peerConnection.createAnswer()
-        await ctx?.peerConnection.setRemoteDescription(offer)
-
-        
- 
+     
       }
       handleRemote()
     }
@@ -27,15 +26,17 @@ export const Test = () => {
   
 
     useEffect(() => {
-      
-      if(ctx?.peerConnection){
-        ctx.peerConnection.ontrack=(e)=>{
-          console.log("e=====>Home MyStream",e.streams[0])
-          if(refVideo.current){
-
-            refVideo.current.srcObject=e.streams[0]
+      const peer =ctx?.peerConnection
+      const tagVideo =refVideo.current
+  
+      if(peer){
+        peer.on("call", (stream)=>{
+          console.log("+++>>>>> ",stream)
+          if(tagVideo !==null){
+            console.log("=====test====",stream)
           }
-        }
+
+        })
 
       }
     }, [])

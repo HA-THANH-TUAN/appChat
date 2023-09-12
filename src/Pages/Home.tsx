@@ -5,7 +5,6 @@ import { refreshApp as refreshAppAction } from '../features/refreshApp/refreshAp
 import { Test } from '../Components/Test';
 export const Home = () => {
   const dispatch= useAppDispatch()
-  console.log("refreshAppAction:::",refreshAppAction())
   return (
     <div>
       <Test/>

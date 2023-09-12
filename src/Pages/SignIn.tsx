@@ -2,13 +2,11 @@ import React, { useState,useEffect } from 'react'
 import AuthenApi from '../apis/authenApi'
 import {IFomSignIn} from '../apis/authenApi'
 import { useNavigate } from 'react-router-dom'
-import { setCookie } from '../Utils/setCookie'
 import Cookies from 'js-cookie'
 import { useMutation } from 'react-query'
 import Loading from '../Components/Loading'
-import { useDispatch } from 'react-redux'
 import { useAppDispatch } from '../app/hooks/useCustomReduxTookit'
-import { resetAuth, setIsLogin } from '../features/auth/authSlice'
+import { resetAuth, setIsLogin, setUserInfor } from '../features/auth/authSlice'
 import { handleLogout } from '../Utils/handleLogout'
 
 
@@ -65,8 +63,9 @@ const SignIn = () => {
             Cookies.set("access_token", tokensData.accessToken)
             Cookies.set("refresh_token", tokensData.refreshToken)
             localStorage.setItem("user", JSON.stringify(userData))
+            dispatch(setUserInfor(userData))
             dispatch(setIsLogin(true))
-            nav("/")
+            nav("/", {replace:true})
           }  
         }
       },

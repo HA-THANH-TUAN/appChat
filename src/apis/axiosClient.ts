@@ -4,6 +4,7 @@ import handleLoginAgain from "../Utils/handleLoginAgain";
 import { store } from "../app/store";
 import {refreshApp} from "../features/refreshApp/refreshApp";
 import handleRefreshToken from "../Utils/handleRefreshToken";
+import { resetAuth } from "../features/auth/authSlice";
 
 const axiosClient=axios.create({
     baseURL:process.env.REACT_APP_URL_DOMAIN,
@@ -73,6 +74,7 @@ axiosClient.interceptors.response.use( async(response:AxiosResponse) => {
       }
       else{
         store.dispatch(refreshApp())
+        store.dispatch(resetAuth())
         handleLoginAgain()
       }
     }

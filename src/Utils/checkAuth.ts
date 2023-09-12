@@ -1,11 +1,11 @@
 import Cookies from 'js-cookie';
+import { IUserInfor } from '../models/Types/auth.response';
+
+
+
 export interface IcheckAuth {
     isLogin : boolean,
-    user?: {
-        name:string,
-        id:string,
-        email:string
-    }
+    user?: IUserInfor
 
 }
 function checkAuth ():IcheckAuth{
@@ -13,7 +13,6 @@ function checkAuth ():IcheckAuth{
         const refeshToken= Cookies.get("refresh_token")
         const dataUserLocalStorage = localStorage.getItem("user")
         if(refeshToken !==undefined && dataUserLocalStorage !==null){
-            console.log("===> true")
             const userInfor= JSON.parse(dataUserLocalStorage)
             return {
                 isLogin:true,

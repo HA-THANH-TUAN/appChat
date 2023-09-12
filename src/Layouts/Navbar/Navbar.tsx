@@ -14,6 +14,8 @@ import CreatePost from './CreatePost/CreatePost'
 import Notification from './Notification/Notification'
 import { getCookie } from '../../Utils/setCookie'
 import MyContext from '../../app/context/context'
+import { useAppSelector } from '../../app/hooks/useCustomReduxTookit'
+import { selectNumberNotifyMessage } from '../../features/notify/notifySlice'
 
 interface navListItem {
     name:string, url:string[]
@@ -53,6 +55,8 @@ export default function Navbar() {
     const [popUpCreate, setPopUpCreate]= React.useState<boolean>(false)
     const [popUpName, setPopUpName]= React.useState<string>("")
     const nav=useNavigate()
+
+    const numberNotify = useAppSelector(selectNumberNotifyMessage)
  
     
 
@@ -158,7 +162,9 @@ export default function Navbar() {
                                 setPopUpName("")
                             }}
                         >
-                            <span className='text-2xl'><RiMessengerLine/></span>
+                            <span className='text-2xl relative'><RiMessengerLine/>
+                                {Boolean(numberNotify)&&<span className='absolute text-[9px] rounded-[50%] w-4 leading-none h-4 bg-red-500 text-white flex  justify-center items-center font-bold -top-[5px] -right-[5px]'>{numberNotify}</span>}
+                            </span>
                             <p className={`${type===true ? undefined :"hidden"} ml-4`}>Messages</p>
                         </span>
                     </NavLink>

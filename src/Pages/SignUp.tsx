@@ -63,7 +63,7 @@ const SignUp = () => {
           Cookies.set("access_token", tokensData.accessToken ,{expires:twoHourFromNow, secure:true})
           Cookies.set("refresh_token", tokensData.refreshToken, {expires:twoHourFromNow, secure:true})
           localStorage.setItem("user", JSON.stringify(userData))
-          nav("/")
+          nav("/", {replace:true})
         }
       }
     } catch (error) {

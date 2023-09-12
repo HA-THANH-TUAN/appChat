@@ -1,55 +1,83 @@
 import React, {useContext, useEffect, useState,useRef} from 'react'
 import PopUpCall from '../Layouts/FieldChat/PopUpCall'
-import { useMatch, useSearchParams } from 'react-router-dom'
+import { createSearchParams, useMatch, useSearchParams } from 'react-router-dom'
 import MyContext from '../app/context/context'
+import Peer from 'peerjs'
+import { uid } from 'uid'
+
+import AreaCall from './AreaCall'
+import { useAppDispatch, useAppSelector } from '../app/hooks/useCustomReduxTookit'
+import { setIsPageCall } from '../features/call/callSlice'
 
 const CallCScreen = () => {
   const ctx=useContext(MyContext)
+  const [peerId] =useState<string>(()=>uid(36))
 
-  const [isProcessCall, setIsProcessCall] =useState<number>(0)
+  const [peer]=useState<Peer>(()=>{
+    return new Peer(peerId)
+  })
+
+  const gState= useAppSelector((state)=>state)
+ 
+  console.log("gState:::",gState)
+  console.log("peer:::",peer)
   
-  let [searchParams] = useSearchParams()
+  console.log("ctx  :::",ctx  )
+  const [isProcessCall, setIsProcessCall] =useState<boolean>(true)
+  
+  let [searchParams, setSearchParams] = useSearchParams()
   const numberKey = searchParams.size
   const hasVideo = searchParams.get("hasVideo")
   const roomId = searchParams.get("roomId" )
+  const conversationStatus = searchParams.get("conversationStatus")
   const [stream, setStream]=useState<MediaStream>()
+  const dispatch = useAppDispatch()
 
   const refIdTimeOut = useRef<NodeJS.Timer>()
+
   const timerCall = useRef<number>(0)
 
-  const [offer,setOffer] = useState<RTCSessionDescriptionInit>()
 
   useEffect(()=>{
+    dispatch(setIsPageCall(true))
     if(ctx?.peerConnection){
       const createStream =async () => {
         try {
           const constraints: MediaStreamConstraints={
-            audio:true,
-            video:false,
+            audio:false,
+            video:true,
           }
           const stream =await navigator.mediaDevices.getUserMedia(constraints)
-          console.log("stream in UseEffect:::",stream)
-          stream.getTracks().forEach((track) => ctx?.peerConnection.addTrack(track, stream));
-          const offer = await ctx?.peerConnection.createOffer();
-          await ctx?.peerConnection.setLocalDescription(offer)
-          setOffer(offer)
           setStream(stream)
           
         } catch (error) {
           alert("Lỗi stream !!!")
+          console.log("error:::",error)
         }
       }
       createStream()
-
-      ctx.peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          console.log("onicecandidateonicecandidate:::", event)
-          // Send the candidate to the other party
-        }
-      }
     }
 
   },[])
+
+  const socketIO = ctx?.socketIO
+
+  useEffect(()=>{
+    if(socketIO){
+        socketIO.on("acceptCalling",()=>{
+          console.log("refIdTimeOut.current",refIdTimeOut.current)
+            clearInterval(refIdTimeOut.current)
+          })
+          
+          socketIO.on("rejectCalling", ()=>{
+            console.log("cuoc goi tu choi!!!")
+            clearInterval(refIdTimeOut.current)
+        })
+
+    }
+  },[])
+
+
 
 
 
@@ -64,52 +92,55 @@ const CallCScreen = () => {
   console.log("=====>>" , stream)
 
   const handleOnStartCalling = ()=>{
-      console.log("offer", offer)
-      console.log("stream", stream)
-
-      const handleSendSession=()=>{
-            const socketIO = ctx?.socketIO
-            if(socketIO && offer){
-                if(socketIO.connected===false){
+    setSearchParams({hasVideo,roomId,conversationStatus:"start"})
+    const handleSendSession=()=>{
+      if(socketIO){
+        if(socketIO.connected===false){
                     console.log("Kết nối lại !!!")
                     socketIO.connect()
-                }else{
-                    console.log("Kết nối luôn offer::: !!!",offer)
-                    socketIO.emit("requestCall", {
-                        roomId:roomId,
-                        sessionRTC: offer
-                    })
-                }
-    
+                  }
+                  
+                  socketIO.emit("requestCall", {
+                    peerId : peerId,
+                    roomId: roomId
+                  })
+                  
+                  
+                  
             }
         }
 
         refIdTimeOut.current = setInterval(()=>{
             if(timerCall.current<9){
-                console.log("run Interval::", ctx?.peerConnection)
+              console.log("run Interval::", ctx?.peerConnection)
                 handleSendSession();
                 timerCall.current++
                 return undefined
-            }
-            clearInterval(refIdTimeOut.current)
+              }
+              clearInterval(refIdTimeOut.current)
+              timerCall.current=0
         }, 3000)
 
-  }
+        // setIsProcessCall((state)=>(!state))
+      }
+      
 
-
+      console.log("render")
+      
   return (
     <div>
         {
          <>
             {
-              isProcessCall === 0 ? 
+              !conversationStatus ? 
               <PopUpCall 
                 onStartCalling={handleOnStartCalling}
                 stream={stream} 
                 isCamera={hasVideoCovert}
-              />
-              
-              :""
+              />:
+              <>
+                { stream!==undefined && <AreaCall myStream={stream}/>}
+              </>
             
             }
           </> 

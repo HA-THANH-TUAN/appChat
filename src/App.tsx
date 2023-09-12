@@ -19,17 +19,18 @@ import { useAppSelector } from './app/hooks/useCustomReduxTookit';
 import { selectorIsLogin } from './features/auth/authSlice';
 import MyContextProvider from './app/context/MyContextProvider';
 import { initialContext } from './app/context/context';
-import AreaCall from './Pages/AreaCall';
+import { selectIsPageCall } from './features/call/callSlice';
 
 function App() {
   
   const isLogin = useAppSelector(selectorIsLogin)
+  const  isPageCall= useAppSelector(selectIsPageCall)
 
   return (
     <MyContextProvider initialValue={initialContext}>
       <div className='flex'>
         <BrowserRouter>
-          {isLogin && <Navbar/>} 
+          {isLogin && !isPageCall && <Navbar/>} 
           <Routes>
             <Route path='/account/sign-up' element={<SignUp/>}></Route >
             <Route path='/account/sign-in' element={<SignIn/>}></Route >

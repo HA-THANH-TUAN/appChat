@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Peer, { MediaConnection } from 'peerjs'
+import Peer, { DataConnection, MediaConnection } from 'peerjs'
 import { uid } from 'uid'
+
 const LiveStream = () => {
   const [peerObject, setPeerObject]=useState<Peer>()
   const [myId, setMyId]= useState<string>("")
@@ -12,6 +13,7 @@ const LiveStream = () => {
   const [streamVideo, setLiveStreamVideo] =useState<MediaStream>()
 
   const [call, setCall] =useState<MediaConnection>()
+  
   const [videoOfCaller, setVideoOfCaller] =useState<MediaStream>()
   
   const videoOfCallerTag = useRef<HTMLVideoElement>(null)
@@ -26,6 +28,8 @@ const LiveStream = () => {
 
       return navigator.mediaDevices?.getUserMedia(cofig)
     }
+
+    
     const runOpenStream = async ()=>{
       const video =await openStream()
       if(video){
@@ -35,29 +39,32 @@ const LiveStream = () => {
         }
         setLiveStreamVideo(video)
         const a_random_id = uid(36)
-    
-         const peer = new Peer(a_random_id, {key: 'myapikey'}); 
+        
+        const peer = new Peer(a_random_id, {key: 'myapikey'}); 
+
          peer.on("open",(id)=>{console.log("Id Bạn Tạo Ra :::==>", id); setMyId(id)})
          
     
-        //  peer.on('connection', function(connect) { 
-        //   console.log(">>>>>UseEffect:::", connect)
-        //  });
+         peer.on('connection', function(connect) { 
+          console.log("Co nguoi ket noi >>>>>UseEffect:::", connect)
+         });
 
          peer.on('call', function(call) {
            // Answer the call, providing our mediaStream
               console.log("có người gọi bạn đó, bạn muốn nghe không vậy  ???", call)
               call.on('stream', function(stream) {
-                console.log("Đây là stream của bạn đó :::",stream)
                 setVideoOfCaller(stream)
                 const {current:videoTag}= videoOfCallerTag
                 if( videoTag!==null){
                   videoTag.srcObject= stream
+                  console.log("on call peer:::",peer)
                 }
               });
 
               setCall(call)
           });
+
+
 
           // peer.sign
 
@@ -95,7 +102,16 @@ const LiveStream = () => {
           console.log("Bạn Muốn Call :::", idFormInput)
         }
         console.log("Ket nối với bạn của bạn :::", idFormInput)
-        peerObject.call(idFormInput, streamVideo);
+        const call= peerObject.call(idFormInput, streamVideo);
+        call.on("stream",(stream)=>{
+          if(videoOfCallerTag.current !==null){
+            videoOfCallerTag.current.srcObject=stream
+            console.log("==========>>>>> ", stream)
+            console.log("==========>>>>>peerObject  ", peerObject)
+
+          }
+
+        })
       }
     }
   }

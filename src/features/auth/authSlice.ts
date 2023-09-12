@@ -2,15 +2,14 @@ import { RootState } from './../../app/store';
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import checkAuth, { IcheckAuth } from '../../Utils/checkAuth'
+import { IUserInfor } from '../../models/Types/auth.response';
 
 interface IState extends IcheckAuth {
+
 }
 
 const initialState: IState = checkAuth()
 
-const resetState:IState = {
-  isLogin:false,
-}
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -19,7 +18,7 @@ export const authSlice = createSlice({
     setIsLogin: (state, {payload}:PayloadAction<boolean>)=>{
       state.isLogin = payload
     },
-    setUserInfor: (state, {payload}:PayloadAction<IState["user"]>)=>{
+    setUserInfor: (state, {payload}:PayloadAction<IUserInfor>)=>{
       state.user=payload
     },
     resetAuth: (state)=>{

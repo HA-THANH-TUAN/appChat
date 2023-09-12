@@ -37,11 +37,11 @@ const AreaMessage:React.FC<IAreaMessage>= () => {
   }, [changeScrollEnd,queryMessage.status,conversationId]);
   
  
-  function isElementAtTop(element: HTMLDivElement) {
-    const elementRect = element.getBoundingClientRect();
-    return elementRect;
-    return elementRect.top <= 80;
-  }
+  // function isElementAtTop(element: HTMLDivElement) {
+  //   const elementRect = element.getBoundingClientRect();
+  //   return elementRect;
+  //   return elementRect.top <= 80;
+  // }
 
   // useEffect(()=>{
   //   const element =scrollableRef.current
@@ -56,18 +56,13 @@ const AreaMessage:React.FC<IAreaMessage>= () => {
 
   //   }
   // },[])
-  
-
-
   // console.log("queryMessage.status===loading", queryMessage)
 
   const isLoading= queryMessage.status==="loading"
   return (
         <section ref={scrollableRef} className={classNames('flex-1 h-full overflow-x-hidden ',
           {
-            "flex items-center justify-center bg-[#ececec1a]" :isLoading
-    
-            
+            "flex items-center justify-center bg-[#ececec1a]" :isLoading  
           }
         )}>
           <div>

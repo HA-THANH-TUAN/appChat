@@ -2,6 +2,7 @@ import React,{useContext, useEffect, useRef, useState} from 'react'
 import { BsCameraVideoFill, BsCameraVideoOff, BsCameraVideoOffFill } from 'react-icons/bs'
 import { PiMicrophoneFill, PiMicrophoneSlashFill } from 'react-icons/pi'
 import MyContext from '../../app/context/context';
+import { useSearchParams } from 'react-router-dom';
 
 const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 const peerConnection = new RTCPeerConnection(configuration);
@@ -20,6 +21,7 @@ interface IPopUpCall {
 
 const PopUpCall : React.FC<IPopUpCall> = ({ isCamera=false , stream, isMicrophone=false , onStartCalling}) => {
     const refVideo =useRef<HTMLVideoElement>(null)
+    
 
     useEffect(()=>{
         const eVideo= refVideo?.current
@@ -33,14 +35,15 @@ const PopUpCall : React.FC<IPopUpCall> = ({ isCamera=false , stream, isMicrophon
   return (
     <div className='fixed top-0 right-0 w-screen h-screen bg-black'>
         <div className='w-screen h-screen relative flex justify-center items-center'>
-            <div className=' max-w-5xl flex-1 grid grid-cols-6 gap-6 h-[450px]'>
+            <div className=' max-w-5xl flex-1 grid grid-cols-6 gap-6'>
                 <section className='bg-[#18191a] col-span-4 rounded-xl flex flex-col'>
-                    <section className='flex-1 flex justify-center items-center relative'>
+                    <section className='flex-1 flex justify-center items-center relative h-[340px]'>
 
                         {
                             isCamera ? 
                             <>
-                                <video className='z-2' autoPlay width={550} height={300} ref={refVideo}></video>
+                               
+                                <video className='z-2 w-[500px]' autoPlay ref={refVideo}></video>
                                 {!stream && <div className='w-12 absolute z-20'>
                                     <img className='w-full object-contain' src="https://i.gifer.com/ZKZg.gif" alt="loading"/>
                                 </div>}

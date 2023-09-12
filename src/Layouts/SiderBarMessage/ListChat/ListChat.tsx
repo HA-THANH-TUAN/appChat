@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {FiEdit} from "react-icons/fi"
 import { useNavigate, useParams } from 'react-router-dom'
 import { ItemChatSkeleton } from '../../Skeleton/ItemChatSkeleton'
@@ -6,8 +6,7 @@ import ItemChat from '../../../Components/ItemChat'
 import classNames from 'classnames'
 import { IConversation } from '../../../models/Types/chat.response.type'
 import { useAppDispatch } from '../../../app/hooks/useCustomReduxTookit'
-import { selectConversationId, setCoversationId } from '../../../features/chat/chatSlice'
-import { useSelector } from 'react-redux'
+import { setIsRouteMessage, setNotifyNumberMessage } from '../../../features/notify/notifySlice'
 
 interface IMessage{
     handleSetIsPopUp:  React.Dispatch<React.SetStateAction<boolean>> 
@@ -29,6 +28,18 @@ const ListChat:React.FC<IMessage> = ({handleSetIsPopUp,handleSetTypeState, statu
     const handleItemChatClick = ( conversationId?:string)=>{
         nav(`/message/inbox/${conversationId}`)
     }
+    const dispatch= useAppDispatch()
+    
+    useEffect(()=>{
+        dispatch(setIsRouteMessage(true))
+        dispatch(setNotifyNumberMessage(0))
+        return ()=>{
+            dispatch(setIsRouteMessage(false))
+
+        }
+    },[])
+
+
 
     let inforUser:IDataLocal | null = null
     const dataLocalUser = localStorage.getItem("user")
