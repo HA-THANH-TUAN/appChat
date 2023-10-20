@@ -1,0 +1,23 @@
+@host = http://localhost:3003
+
+###
+
+GET {{host}}/user/get-profile/64e08ddfbfc05b4914ea7be6 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTc1ODlhNGVlY2UzZjM2YmQ4M2ZhNSIsImRldmljZUlkIjoiOTRkNzNhNTc2OWU4OTEyMDdiNzIzNDYyIiwicm9sZSI6W10sImlhdCI6MTY5Mjg4MzA5OSwiZXhwIjoxNjkyODgzMjE5fQ.yp1UcOgrdVkWBdc_fIvUgF0WqkwNX3Nwiozo48yVvhU1-mOgSOsGiKIDoSAFJMkD3DqkERWR13FPUPE-Xdbf6TJcu461ejvgNeDTJCqn3tQaT-yFdttxwj0YIKqpmPpAiexhzEzkzyyCnja8OXwR48JEgD1s53r-dXpMGIlvb06kh75Utgo_Tk1zfVljdsfPh9UYCbHA9pBKc2gri5bj2iv0SuX-kwWKTPkoudnPzU9Gd0krT5AUd9a9dzK8xLHlKX4rfuOk1itKteKX7vAuejAN_6R7IccZ8oGmqehYqOWa6Ngb00Tsx-TefxtFLvIB_ov9EQXVavsZ5xT7bHlIyw
+
+
+### 
+
+GET {{host}}/user/get-user/ HTTP/1.1
+content-type: application/json
+Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTU4ZTgzMTJkOWY3MDYxOGFmOTAwYSIsImRldmljZUlkIjoiNDI4ZjNkMDExMzBhOTM4YmUyOTI0ZTc0IiwiaWF0IjoxNjkyNzY2MzAwLCJleHAiOjE2OTI3NzM1MDB9.KQtv85Ra3CfwjOZc6g05-QI2IScgUBoKAYZvxmgl12ajQmMQV-VWblctZVFP4vAYoTHAkBkGuicrDwzn2n7TRYeUd5gpcdT6ubbrQYLvIMerhkdc0k3vCLy2lov5UM_PJs6Wta1lzBit44qgjD3z5Mq6OUDx91PvtCNEQeGDiUKlT62IMTqhecF42k2LXPYfaZerq-UzqQzSMJqPak3_lztXk2_OEFD0GEDZQ4ZQliif7K01NuNGYMEEyIiqnFbGtAfmpCSw5vVViwI647FOyUQR7z1YSb_qwgv3C5l5TQOBYIzQzvgLp6LLfoIcS1mm4z4qLgURt2pc-_v2cZwjxw"
+
+{
+    "name":"Ha Thanh Tuan",
+    "email":"s123456@gmail.com",
+    "idToken":"64def0f6b0f282b2881ebece"
+}
+
+###
+

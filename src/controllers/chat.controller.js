@@ -1,53 +1,99 @@
-const { BadResponse } = require("../core/error.response")
-const { OK, Created } = require("../core/sucess.response")
-const {addConversation: addConversationService} =require("../services/chat.service")
-const {getConversation: getConversationService} =require("../services/chat.service")
-const {getMessageConversation: getMessageConversationService} =require("../services/chat.service")
+const { typeCheck } = require('type-check');
+const { BadResponse } = require('../core/error.response');
+const { OK, Created } = require('../core/sucess.response');
+const ChatService = require('../services/chat.service');
 
 class Chat {
-    async addConversation (res,req, next){
-        const members =res.body.members
-        const userIdCreate = res.userId
-        // check dupple id
-        if(!Array.isArray(members) || members?.length===0){ throw new BadResponse("wrong format !")}
+  constructor() {
+    this.service = new ChatService();
+  }
 
-        const dataIdsCopy=[]
-        const isDoupleId= members.some((_id)=>{
-            console.log("====> ", dataIdsCopy , _id)
-            if(dataIdsCopy.includes(_id) || userIdCreate===_id){
-                return true
-            }
-            dataIdsCopy.push(_id)
-            return false
-        })
+  static checkConficUserId(array) {
+    try {
+      const objectContainUserId = {};
+      array?.forEach((userId) => {
+        objectContainUserId[userId] = undefined;
+      });
+      const lengthProps = Object.keys(objectContainUserId).length;
 
-        if(isDoupleId){
-            throw new BadResponse("cannot created conversation !")
-        }
-
-        const createObjectMember = [...members.map((_id)=>(
-            {
-                userId :_id,
-                role: "member"   
-            }
-        )),{userId:userIdCreate, role: "leader"}]
-
-       const resultService = await addConversationService(createObjectMember)
-
-        new Created("created conversation",resultService).send(req)
-
-
+      if (lengthProps === array.length) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.log('error controller checkconflicUserId:::', error);
+      return true;
     }
-    async getConversation (res,req, next){
-       const resultService = await getConversationService(res.userId)
-        new OK("geted conversation",resultService).send(req)
+  }
+
+  async createConversation(req, res, next) {
+    const userId = req.userId;
+    const members = req.body.members;
+    const isMembersHaveMe = members?.includes(userId);
+    const isConflicUserId = Chat.checkConficUserId(members);
+    if (isMembersHaveMe || !Array.isArray(members) || isConflicUserId) throw new BadResponse();
+
+    await this.service.createConversationGroup(userId, members);
+    new Created('successfully create conversation').send(res);
+  }
+
+  async renameConversation(req, res, next) {
+    const userId = req.userId;
+    const name = req.body.name;
+    const conversationId = req.body.conversationId;
+    await this.service.renameConversation(userId, name, conversationId);
+    new Created('successfully update conversation name').send(res);
+  }
+  async leaderConversation(req, res, next) {
+    const userId = req.userId;
+    const leaderId = req.body.leaderId;
+    const conversationId = req.body.conversationId;
+
+    if (userId === leaderId) {
+      throw new BadResponse('Bad request');
     }
 
-    async getMessageConversation (res, req, next){
-        const conversationId = res.params.conversationId
-        const dataService = await getMessageConversationService(conversationId)
-        new OK("get conversation message success !", dataService).send(req)
+    await this.service.leaderConversation(userId, leaderId, conversationId);
+    new Created('successfully change conversation leader').send(res);
+  }
 
+  async addMemberConversation(res, req, next) {
+    const conversationId = res.body.conversationId;
+    const members = res.body.members;
+    await this.service.addMemberConversation(conversationId, members);
+  }
+
+  async outConversation(req, res, next) {
+    const conversationId = req.body.conversationId;
+    const userId = req.userId;
+    await this.service.outConversation(userId, conversationId);
+    new OK('successfully out conversation').send(res);
+  }
+
+  async getConversations(req, res, next) {
+    const userId = req.userId;
+    const queryData = req.query;
+    const checkDataQuery = typeCheck('{page:String, limit:String}', queryData);
+    if (!checkDataQuery) {
+      throw new BadResponse();
     }
+    const dt = await this.service.getConversations(userId, queryData.page, queryData.limit);
+    new OK('', dt).send(res);
+  }
+
+  async getMessageConversation(req, res, next) {
+    const userId = req.userId;
+    const id = req.params.id;
+    if (!id) throw new BadResponse();
+
+    console.log('getMessageConversation:::');
+
+    const result = await this.service.getMessageConversation(userId, id);
+
+    new OK('', result).send(res);
+  }
+
+  async acceptConversation(res, req, next) {}
+  async deleteConversation(res, req, next) {}
 }
-module.exports = new Chat ()
+module.exports = Chat;

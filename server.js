@@ -1,9 +1,9 @@
-const server=require("./src/app")
+const server = require('./src/app');
 
-const port= process.env.DEV_SERVER_PORT || 3003
+const port = process.env.DEV_SERVER_PORT || 3003;
 
-console.log(port, typeof port)
+console.log(port, typeof port);
 
-server.listen(port,()=>{
-    console.log("server run !")
-})
+server.listen(port, () => {
+  console.log('server run !');
+});

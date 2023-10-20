@@ -4,49 +4,60 @@ const socketIo = require('socket.io');
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const routerAuthentication = require("./routes/authentication.route");
-const routerUser = require("./routes/user.route")
-const routerChat= require("./routes/chat.route")
+const routerAuthentication = require('./routes/authentication.route');
+const routerUser = require('./routes/user.route');
+const routerChat = require('./routes/chat.route');
+const routerFriend = require('./routes/friendShip.route');
 const corsMain = require('./middlewares/cors.middleware,');
 const verifyUser = require('./middlewares/verifyUser.middleware');
 const { handleError } = require('./core/error.response');
 const serviceSocketOI = require('./services/socket/index.socket');
+require('./models/mongodb.model');
 
-require("./models/mongodb.model")
+app.use(corsMain);
 
-app.use(corsMain)
-app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(bodyParser.json());
 
-app.use("/authentication", routerAuthentication)
+app.use(cookieParser());
 
-app.use(handleError(verifyUser)) // after authentication.
+app.use('/authentication', routerAuthentication);
 
-app.use("/chat",routerChat)
+app.use(handleError(verifyUser)); // after authentication.
 
-app.use("/", routerUser)
+app.use('/chat', routerChat);
+
+app.use('/user', routerUser);
+
+app.use(
+  '/friend',
+  (req, res, next) => {
+    req.IO = global._io;
+    next();
+  },
+  routerFriend,
+);
 
 const server = http.createServer(app);
 
-global._io = socketIo(server,{
+global._io = socketIo(server, {
   cors: {
-    origin: '*', 
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 });
 
-serviceSocketOI(global._io)
+serviceSocketOI(global._io);
 
-app.use((err, req, res, next)=>{
-    const status=err.status || 500
-    const message=err.message ||  "Internal Server"
-  console.log("App.use Error End:::", err)
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || 'Internal Server';
+  console.log('App.use Error End:::', err);
   res.status(status).json({
     message: message,
-    status: status
-  })
-})
-module.exports = server
+    status: status,
+  });
+});
 
+module.exports = server;
 
 // module.exports = app

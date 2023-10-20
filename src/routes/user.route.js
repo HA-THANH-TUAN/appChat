@@ -1,33 +1,20 @@
-const express= require("express")
-const { handleError } = require("../core/error.response")
-const {getUser: getUserController}=require("../controllers/user.controller")
-const { addFriend: addFriendController } = require("../controllers/friendShip.controller")
-const {getProfile: getProfileCotroller} =require("../controllers/user.controller")
+const express = require('express');
+const { handleError } = require('../core/error.response');
+// const {getUser: getUserController}=require("../controllers/user.controller")
+// const {searchUser: searchUserController}=require("../controllers/user.controller")
+// const { friendRequest: friendRequestController } = require("../controllers/friendShip.controller")
+// const {getProfile: getProfileCotroller} =require("../controllers/user.controller")
 
-const router= express.Router()
+const UserController = require('../controllers/user.controller');
 
+const router = express.Router();
+
+const controller = new UserController();
 // ----------------------GET-------------------------------
-router.get("/get-users/",handleError(getUserController))
+router.get('/users/', handleError(controller.getUser));
 
-router.get("/get-profile/:userId",handleError(getProfileCotroller))
+router.get('/profile/:userId', handleError(controller.getProfile));
 
-router.get("/add-friend", handleError(addFriendController))
+router.post('/search', handleError(controller.searchUser));
 
-
-
-
-
-
-
-
-
-router.get("/test-middleware", async( req, res, next)=>{
-    
-    console.log("data====>")
-    console.log("req====>",req.home)
-
-    return res.json("OKE NE USER")
-
-})
-
-module.exports = router
+module.exports = router;
